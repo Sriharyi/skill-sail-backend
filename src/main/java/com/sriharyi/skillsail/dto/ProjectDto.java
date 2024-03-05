@@ -27,6 +27,6 @@ public class ProjectDto {
     private String description;
     private List<Skill> skills;
     private Double budget;
-    private ProjectStatus status;
+    private String status;
     private Date deadline;
 }

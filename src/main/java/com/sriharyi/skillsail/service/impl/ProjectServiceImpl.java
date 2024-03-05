@@ -3,6 +3,7 @@ package com.sriharyi.skillsail.service.impl;
 import com.sriharyi.skillsail.dto.ProjectDto;
 import com.sriharyi.skillsail.exception.ProjectNotFoundException;
 import com.sriharyi.skillsail.model.Project;
+import com.sriharyi.skillsail.model.enums.ProjectStatus;
 import com.sriharyi.skillsail.repository.ProjectRepository;
 import com.sriharyi.skillsail.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -75,12 +76,13 @@ public class ProjectServiceImpl implements ProjectService {
                 .description(project.getDescription())
                 .skills(project.getSkills())
                 .budget(project.getBudget())
-                .status(project.getStatus())
+                .status(project.getStatus().name())
                 .deadline(project.getDeadline())
                 .build();
     }
     
     protected Project mapToProject(ProjectDto projectDto) {
+        ProjectStatus status = projectDto.getStatus() == null ? ProjectStatus.OPEN : ProjectStatus.valueOf(projectDto.getStatus());
         return Project.builder()
                 .id(projectDto.getId())
                 .employerProfile(projectDto.getEmployerProfile())
@@ -89,7 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .description(projectDto.getDescription())
                 .skills(projectDto.getSkills())
                 .budget(projectDto.getBudget())
-                .status(projectDto.getStatus())
+                .status(status)
                 .deadline(projectDto.getDeadline())
                 .build();
     }
