@@ -36,6 +36,10 @@ public class EmployerServiceImpl implements EmployerService {
     public EmployerDto getEmployerById(String id) {
         EmployerProfile employerProfile = employerRepository.findById(id)
                 .orElseThrow(() -> new EmployerNotFoundException("Employer not found" ));
+        if(employerProfile.isDeleted()){
+            throw new EmployerNotFoundException("Employer not found");
+        }
+        return mapToEmployerDto(employerProfile);
     }
 
     @Override
