@@ -1,14 +1,9 @@
 package com.sriharyi.skillsail.model;
 
-
 import java.util.Date;
-import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -20,27 +15,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "skills")
-public class Skill {
-    @Id
+@Document(collection = "bids")
+public class Bid {
     private String id;
-
-    @Indexed(unique = true)
-    private String name;
-
-    @Indexed(unique = true)
-    private String category;
-
-    private String description;
+    private String projectId;
+    private String freelancerId;
+    private Double amount;
+    private String proposal;
+    private boolean accepted;
     
-    @DBRef()
-    private Set<Question> questions;
-    
-    private boolean deleted;
-
     @CreatedDate
     private Date createdDate;
-
+    
     @LastModifiedDate
     private Date updatedDate;
+
+    private boolean deleted;
 }

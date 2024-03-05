@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -14,11 +15,16 @@ import java.util.List;
 @Builder
 @Document(collection = "freelancers")
 public class FreeLancerProfile {
+    @Id
     private String id;
     private String profilePic;
     private String displayName;
     private String userName;
     private String description;
     private List<Education> education;
+    private List<String> skills;
+    private List<Skill> skillsEarned; // skills that the freelancer has earned from assessments
+    private List<Rating> ratings;
+    private boolean verified;
     private boolean deleted;
 }

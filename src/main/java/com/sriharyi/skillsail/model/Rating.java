@@ -1,46 +1,37 @@
 package com.sriharyi.skillsail.model;
 
 
-import java.util.Date;
-import java.util.Set;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "skills")
-public class Skill {
+@Document(collection = "ratings")
+public class Rating {
     @Id
     private String id;
-
     @Indexed(unique = true)
-    private String name;
-
+    private String raterId; // the person who is giving the rating
     @Indexed(unique = true)
-    private String category;
-
-    private String description;
-    
-    @DBRef()
-    private Set<Question> questions;
-    
+    private String revieweeId; // the person who is being rated
+    private String review;
+    private Integer rating;
     private boolean deleted;
 
     @CreatedDate
-    private Date createdDate;
-
+    private Date CreatedDate;
     @LastModifiedDate
     private Date updatedDate;
+
 }

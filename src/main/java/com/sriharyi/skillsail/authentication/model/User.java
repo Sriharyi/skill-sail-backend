@@ -30,6 +30,7 @@ public class User implements UserDetails{
     private String password;
     private Set<Role> roles;
     private Set<Permission> permissions;
+    private boolean deleted;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
