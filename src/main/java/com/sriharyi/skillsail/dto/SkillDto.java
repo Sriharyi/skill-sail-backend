@@ -20,5 +20,8 @@ public class SkillDto {
     private String name;
     @JsonProperty("skillDescription")
     private String description;
+    @JsonProperty("skillCategory")
+    private String category;
+    @JsonProperty("questions")
     private Set<QuestionDto> questions;
 }
