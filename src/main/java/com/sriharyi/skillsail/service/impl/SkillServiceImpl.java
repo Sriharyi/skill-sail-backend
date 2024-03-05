@@ -106,6 +106,7 @@ public class SkillServiceImpl implements SkillService {
                 .name(skillDto.getName())
                 .description(skillDto.getDescription())
                 .questions(new HashSet<Question>())
+                .category(skillDto.getCategory())
                 .build();
     }
 
@@ -117,6 +118,7 @@ public class SkillServiceImpl implements SkillService {
                 .questions(skill.getQuestions().stream()
                         .map(this::mapToQuestionDto)
                         .collect(Collectors.toSet()))
+                .category(skill.getCategory())
                 .build();
     }
 
