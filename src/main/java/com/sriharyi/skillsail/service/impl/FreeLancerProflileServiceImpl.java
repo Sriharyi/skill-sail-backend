@@ -70,6 +70,10 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
                 .userName(freelancerProfileDto.getUserName())
                 .description(freelancerProfileDto.getDescription())
                 .education(freelancerProfileDto.getEducation())
+                .skills(freelancerProfileDto.getSkills())
+                .skillsEarned(freelancerProfileDto.getSkillsEarned())
+                .ratings(freelancerProfileDto.getRatings())
+                .verified(freelancerProfileDto.isVerified())
                 .build();
     }
 
@@ -80,6 +84,10 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
                 .userName(freeLancerProfile.getUserName())
                 .description(freeLancerProfile.getDescription())
                 .education(freeLancerProfile.getEducation())
+                .skills(freeLancerProfile.getSkills())
+                .skillsEarned(freeLancerProfile.getSkillsEarned())
+                .ratings(freeLancerProfile.getRatings())
+                .verified(freeLancerProfile.isVerified())
                 .build();
     }
 }
