@@ -23,6 +23,7 @@ public class Skill {
     @Indexed(unique = true)
     private String name;
     private String description;
+    
     @DBRef()
     private Set<Question> questions;
     private boolean deleted;
