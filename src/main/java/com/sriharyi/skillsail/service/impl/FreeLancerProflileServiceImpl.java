@@ -34,8 +34,7 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(id).orElseThrow(
                 () -> new FreeLancerProfileNotFoundException("FreeLancerProfile not found")
         );
-        if(freeLancerProfile.isDeleted())
-        {
+        if (freeLancerProfile.isDeleted()) {
             throw new FreeLancerProfileNotFoundException("FreeLancerProfile not found");
         }
         return convertToDto(freeLancerProfile);
@@ -43,19 +42,24 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
 
     @Override
     public FreelancerProfileDto updateFreeLancerProfile(String id, FreelancerProfileDto freelancerProfileDto) {
-        FreeLancerProfile freeLancerProfile = convertToEntity(freelancerProfileDto);
-        freeLancerProfile.setId(id);
-        FreeLancerProfile updatedFreeLancerProfile = freeLancerProfileRepository.save(freeLancerProfile);
+        FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(id).orElseThrow(
+                () -> new FreeLancerProfileNotFoundException("FreeLancerProfile not found")
+        );
+        if (freeLancerProfile.isDeleted()) {
+            throw new FreeLancerProfileNotFoundException("FreeLancerProfile not found");
+        }
+        freelancerProfileDto.setId(id);
+        FreeLancerProfile updatedFreeLancerProfile = freeLancerProfileRepository.save(convertToEntity(freelancerProfileDto));
         return convertToDto(updatedFreeLancerProfile);
     }
 
     @Override
     public void deleteFreeLancerProfile(String id) {
-         FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(id).orElseThrow(
-                 () -> new FreeLancerProfileNotFoundException("FreeLancerProfile not found")
-         );
-            freeLancerProfile.setDeleted(true);
-            freeLancerProfileRepository.save(freeLancerProfile);
+        FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(id).orElseThrow(
+                () -> new FreeLancerProfileNotFoundException("FreeLancerProfile not found")
+        );
+        freeLancerProfile.setDeleted(true);
+        freeLancerProfileRepository.save(freeLancerProfile);
 
     }
 
