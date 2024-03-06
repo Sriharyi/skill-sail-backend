@@ -4,9 +4,12 @@ import com.sriharyi.skillsail.dto.FreelancerProfileDto;
 import com.sriharyi.skillsail.exception.FreeLancerProfileNotFoundException;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.repository.FreeLancerProfileRepository;
+import com.sriharyi.skillsail.service.FileStorageService;
 import com.sriharyi.skillsail.service.FreeLancerProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,6 +19,8 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
 
     private final FreeLancerProfileRepository freeLancerProfileRepository;
 
+    private final FileStorageService fileStorageService;
+    
     @Override
     public FreelancerProfileDto createFreeLancerProfile(FreelancerProfileDto freelancerProfileDto) {
         FreeLancerProfile freeLancerProfile = convertToEntity(freelancerProfileDto);
@@ -61,6 +66,21 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         freeLancerProfile.setDeleted(true);
         freeLancerProfileRepository.save(freeLancerProfile);
 
+    }
+
+    @Override
+    public String updateFreeLancerProfilePicture(String id, MultipartFile profilePicture) {
+        FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(id).orElseThrow(
+                () -> new FreeLancerProfileNotFoundException("FreeLancerProfile not found")
+        );
+        if (freeLancerProfile.isDeleted()) {
+            throw new FreeLancerProfileNotFoundException("FreeLancerProfile not found");
+        }
+        String folderName = "profile-pictures";
+        String imagePath = fileStorageService.storeFile(profilePicture, folderName);
+        freeLancerProfile.setProfilePic(imagePath);
+        freeLancerProfileRepository.save(freeLancerProfile);
+        return imagePath;
     }
 
     protected FreeLancerProfile convertToEntity(FreelancerProfileDto freelancerProfileDto) {

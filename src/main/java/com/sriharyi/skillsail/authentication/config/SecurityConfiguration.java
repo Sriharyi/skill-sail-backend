@@ -25,7 +25,7 @@ public class SecurityConfiguration {
 
     private final LogoutHandler logoutHandler;
 
-    private String[] permitAllEndpointList = {"/api/v1/auth/authenticate","/api/v1/auth/register"};
+    private String[] permitAllEndpointList = {"/api/v1/auth/authenticate","/api/v1/auth/register","/static/**"};
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception

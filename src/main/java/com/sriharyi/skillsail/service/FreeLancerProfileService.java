@@ -1,6 +1,7 @@
 package com.sriharyi.skillsail.service;
 
 import com.sriharyi.skillsail.dto.FreelancerProfileDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface FreeLancerProfileService {
     FreelancerProfileDto updateFreeLancerProfile(String id, FreelancerProfileDto freelancerProfileDto);
 
     void deleteFreeLancerProfile(String id);
+
+    String updateFreeLancerProfilePicture(String id, MultipartFile profilePicture);
 }
