@@ -10,6 +10,8 @@ import com.sriharyi.skillsail.repository.SkillRepository;
 import com.sriharyi.skillsail.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -98,6 +100,12 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public QuestionDto createQuestion(String id, QuestionDto questionDto) {
         throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public Page<SkillDto> getSkillsByPage(Pageable pageable) {
+        Page<Skill> skills = skillRepository.findAllByDeletedIsFalse(pageable);
+        return skills.map(this::mapToSkillDto);
     }
 
     protected Skill mapToSkill(SkillDto skillDto) {
