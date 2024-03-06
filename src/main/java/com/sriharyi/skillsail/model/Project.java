@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.Date;
 import java.util.List;
@@ -23,9 +20,9 @@ import java.util.List;
 public class Project {
 
     private String id;
-    @DBRef
+    @DocumentReference(collection = "employers",lazy = true)
     private EmployerProfile employerProfile;
-    @DBRef
+    @DocumentReference(collection = "freelancers",lazy = true)
     private FreeLancerProfile selectedFreelancerId;
     private String title;
     private String description;

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +19,9 @@ import lombok.NoArgsConstructor;
 @Document(collection = "bids")
 public class Bid {
     private String id;
+    @DocumentReference(collection = "projects",lazy = true)
     private String projectId;
+    @DocumentReference(collection = "freelancers",lazy = true)
     private String freelancerId;
     private Double amount;
     private String proposal;

@@ -1,7 +1,9 @@
 package com.sriharyi.skillsail.model;
 
 import com.sriharyi.skillsail.model.enums.TestStatus;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -19,10 +24,10 @@ public class Assessment {
     @Id
     private String id;
 
-    @DBRef
+    @DocumentReference(collection = "freelancers",lazy = true)
     private FreeLancerProfile freelancerProfile;
 
-    @DBRef
+    @DocumentReference(collection = "skills",lazy = true)
     private Skill skill;
 
     private Integer score;
@@ -32,4 +37,11 @@ public class Assessment {
     private TestStatus status;
 
     private boolean deleted;
+
+    @CreatedDate
+    private Date CreatedDate;
+
+    @LastModifiedDate
+    private Date UpdatedDate;
+
 }

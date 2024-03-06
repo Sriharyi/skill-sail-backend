@@ -1,6 +1,8 @@
 package com.sriharyi.skillsail.controller;
 
 import com.sriharyi.skillsail.dto.AssessmentDto;
+import com.sriharyi.skillsail.dto.AssessmentParams;
+import com.sriharyi.skillsail.dto.CanTakeTest;
 import com.sriharyi.skillsail.service.AssessmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,6 +52,17 @@ public class AssessmentController {
         AssessmentDto deletedAssessment = assessmentService.deleteAssessment(id);
         return new ResponseEntity<>(deletedAssessment, HttpStatus.OK);
     }
+
+    @GetMapping("/cantake")
+    private ResponseEntity<CanTakeTest> canTakeAssessment(@ModelAttribute AssessmentParams params) {
+        String freelancerProfileId = params.getFreelancerId();
+        String skillId = params.getSkillId();
+        CanTakeTest canTake = assessmentService.canTakeAssessment(freelancerProfileId, skillId);
+        return new ResponseEntity<>(canTake, HttpStatus.OK);
+    }
+
+
+
 //
 //    @GetMapping("/freelancer")
 //    private ResponseEntity<AssessmentDto> getAssessmentByFreelancer(@RequestParam String freelancerProfileId) {

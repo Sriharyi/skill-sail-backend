@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 @Data
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class Skill {
 
     private String description;
     
-    @DBRef()
+    @DocumentReference(collection = "questions",lazy = true)
     private Set<Question> questions;
     
     private boolean deleted;

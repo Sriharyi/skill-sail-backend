@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssessmentDto {
     private String id;
-    private String freelancerProfileId;
+    private String freelancerId;
     private String skillId;
     private String status;
 }
