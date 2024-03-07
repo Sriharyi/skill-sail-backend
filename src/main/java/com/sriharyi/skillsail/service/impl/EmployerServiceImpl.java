@@ -45,6 +45,7 @@ public class EmployerServiceImpl implements EmployerService {
         return mapToEmployerDto(employerProfile);
     }
 
+
     @Override
     public EmployerDto updateEmployer(String id, EmployerDto employerDto) {
         EmployerProfile employerProfile = employerRepository.findById(id)
@@ -52,7 +53,25 @@ public class EmployerServiceImpl implements EmployerService {
         if (employerProfile.isDeleted()) {
             throw new EmployerNotFoundException("Employer not found");
         }
-        employerDto.setId(id);
+
+        if(employerDto.getCompanyName() != null)
+            employerProfile.setCompanyName(employerDto.getCompanyName());
+        if(employerDto.getCompanyEmail() != null)
+            employerProfile.setCompanyEmail(employerDto.getCompanyEmail());
+        if(employerDto.getCompanyWebsite() != null)
+            employerProfile.setCompanyWebsite(employerDto.getCompanyWebsite());
+        if(employerDto.getCompanyDescription() != null)
+            employerProfile.setCompanyDescription(employerDto.getCompanyDescription());
+        if(employerDto.getCompanyLogo() != null)
+            employerProfile.setCompanyLogo(employerDto.getCompanyLogo());
+        if(employerDto.getCompanyLocation() != null)
+            employerProfile.setCompanyLocation(employerDto.getCompanyLocation());
+        if(employerDto.getCompanyIndustry() != null)
+            employerProfile.setCompanyIndustry(employerDto.getCompanyIndustry());
+        if(employerDto.isVerified())
+            employerProfile.setVerified(true);
+        System.out.println(employerProfile);
+
         EmployerProfile updatedEmployerProfile = employerRepository.save(employerProfile);
         return mapToEmployerDto(updatedEmployerProfile);
     }
@@ -74,8 +93,8 @@ public class EmployerServiceImpl implements EmployerService {
                 .companyDescription(employerProfile.getCompanyDescription())
                 .companyLogo(employerProfile.getCompanyLogo())
                 .companyLocation(employerProfile.getCompanyLocation())
+                .companyIndustry(employerProfile.getCompanyIndustry())
                 .verified(employerProfile.isVerified())
-                .industry(employerProfile.getIndustry())
                 .build();
     }
 
@@ -88,8 +107,8 @@ public class EmployerServiceImpl implements EmployerService {
                 .companyDescription(employerDto.getCompanyDescription())
                 .companyLogo(employerDto.getCompanyLogo())
                 .companyLocation(employerDto.getCompanyLocation())
+                .companyIndustry(employerDto.getCompanyIndustry())
                 .verified(employerDto.isVerified())
-                .industry(employerDto.getIndustry())
                 .build();
     }
 }

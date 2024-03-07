@@ -19,7 +19,7 @@ public class EmployerDto {
     private String companyWebsite;
     private String companyDescription;
     private String companyLocation;
-    private String industry;
+    private String companyIndustry;
     private boolean verified;
 
 }
