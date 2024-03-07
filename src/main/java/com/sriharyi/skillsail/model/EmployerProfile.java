@@ -1,10 +1,6 @@
 package com.sriharyi.skillsail.model;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import org.springframework.context.event.EventListener;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;

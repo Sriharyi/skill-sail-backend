@@ -1,15 +1,17 @@
 package com.sriharyi.skillsail.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.sriharyi.skillsail.dto.EmployerDto;
 import com.sriharyi.skillsail.exception.EmployerNotFoundException;
 import com.sriharyi.skillsail.model.EmployerProfile;
 import com.sriharyi.skillsail.repository.EmployerRepository;
 import com.sriharyi.skillsail.service.EmployerService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ import java.util.List;
 public class EmployerServiceImpl implements EmployerService {
 
     private final EmployerRepository employerRepository;
+
     @Override
     public EmployerDto createEmployer(EmployerDto employerDto) {
         EmployerProfile employerProfile = mapToEmployerProfile(employerDto);
@@ -35,8 +38,8 @@ public class EmployerServiceImpl implements EmployerService {
     @Override
     public EmployerDto getEmployerById(String id) {
         EmployerProfile employerProfile = employerRepository.findById(id)
-                .orElseThrow(() -> new EmployerNotFoundException("Employer not found" ));
-        if(employerProfile.isDeleted()){
+                .orElseThrow(() -> new EmployerNotFoundException("Employer not found"));
+        if (employerProfile.isDeleted()) {
             throw new EmployerNotFoundException("Employer not found");
         }
         return mapToEmployerDto(employerProfile);
@@ -45,19 +48,19 @@ public class EmployerServiceImpl implements EmployerService {
     @Override
     public EmployerDto updateEmployer(String id, EmployerDto employerDto) {
         EmployerProfile employerProfile = employerRepository.findById(id)
-                .orElseThrow(() -> new EmployerNotFoundException("Employer not found" ));
-        if(employerProfile.isDeleted()){
+                .orElseThrow(() -> new EmployerNotFoundException("Employer not found"));
+        if (employerProfile.isDeleted()) {
             throw new EmployerNotFoundException("Employer not found");
         }
         employerDto.setId(id);
-        EmployerProfile updatedEmployerProfile = employerRepository.save(mapToEmployerProfile(employerDto));
+        EmployerProfile updatedEmployerProfile = employerRepository.save(employerProfile);
         return mapToEmployerDto(updatedEmployerProfile);
     }
 
     @Override
     public void deleteEmployer(String id) {
         EmployerProfile employerProfile = employerRepository.findById(id)
-                .orElseThrow(() -> new EmployerNotFoundException("Employer not found" ));
+                .orElseThrow(() -> new EmployerNotFoundException("Employer not found"));
         employerProfile.setDeleted(true);
         employerRepository.save(employerProfile);
     }
