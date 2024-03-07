@@ -1,17 +1,19 @@
 package com.sriharyi.skillsail.model;
 
-import com.sriharyi.skillsail.dto.Education;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.List;
+import com.sriharyi.skillsail.dto.Education;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,7 +33,7 @@ public class FreeLancerProfile {
     private boolean verified;
     private boolean deleted;
     @CreatedDate
-    private Date CreatedDate;
+    private LocalDateTime createdDate;
     @LastModifiedDate
-    private Date UpdatedDate;
+    private LocalDateTime updatedDate;
 }

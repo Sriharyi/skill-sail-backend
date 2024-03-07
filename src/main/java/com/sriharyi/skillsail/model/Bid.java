@@ -1,5 +1,6 @@
 package com.sriharyi.skillsail.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -28,10 +29,10 @@ public class Bid {
     private boolean accepted;
     
     @CreatedDate
-    private Date createdDate;
+    private LocalDateTime createdDate;
     
     @LastModifiedDate
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 
     private boolean deleted;
 }

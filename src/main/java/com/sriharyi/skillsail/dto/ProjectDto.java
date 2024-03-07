@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -28,5 +29,5 @@ public class ProjectDto {
     private List<Skill> skills;
     private Double budget;
     private String status;
-    private Date deadline;
+    private LocalDateTime deadline;
 }

@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CanTakeTest {
-    private String skillId;
-    private String freelancerId;
-    private String SkillName;
+
+    private String message;
     private boolean canTake;
 }

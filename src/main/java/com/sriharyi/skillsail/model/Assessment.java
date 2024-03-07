@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -39,9 +40,9 @@ public class Assessment {
     private boolean deleted;
 
     @CreatedDate
-    private Date CreatedDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
-    private Date UpdatedDate;
+    private LocalDateTime updatedDate;
 
 }

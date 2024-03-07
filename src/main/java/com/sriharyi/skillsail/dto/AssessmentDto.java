@@ -17,4 +17,5 @@ public class AssessmentDto {
     private String freelancerId;
     private String skillId;
     private String status;
+    private Integer score;
 }

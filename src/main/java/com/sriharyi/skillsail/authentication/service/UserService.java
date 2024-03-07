@@ -8,7 +8,9 @@ import com.sriharyi.skillsail.authentication.model.Role;
 import com.sriharyi.skillsail.authentication.model.User;
 import com.sriharyi.skillsail.authentication.repository.RoleRepository;
 import com.sriharyi.skillsail.authentication.repository.UserRepository;
+import com.sriharyi.skillsail.model.EmployerProfile;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
+import com.sriharyi.skillsail.repository.EmployerRepository;
 import com.sriharyi.skillsail.repository.FreeLancerProfileRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +34,8 @@ public class UserService implements UserDetailsService{
     private final RoleRepository roleRepository;
 
     private final FreeLancerProfileRepository freeLancerProfileRepository;
+
+    private final EmployerRepository employerRepository;
 
     private final JwtService jwtService;
 
@@ -68,11 +72,21 @@ public class UserService implements UserDetailsService{
 
         User savedUser = userRepository.save(user);
 
-        FreeLancerProfile profile = FreeLancerProfile.builder()
-        .id(savedUser.getId())
-        .userName(userName)
-        .build();
-        freeLancerProfileRepository.save(profile);
+        if (userdto.getRoles().contains("ROLE_FREELANCER")) {
+            FreeLancerProfile profile = FreeLancerProfile.builder()
+                    .id(savedUser.getId())
+                    .userName(userName)
+                    .build();
+            freeLancerProfileRepository.save(profile);
+        }else if (userdto.getRoles().contains("ROLE_EMPLOYER")) {
+            EmployerProfile profile = EmployerProfile.builder()
+                    .id(savedUser.getId())
+                    .companyEmail(savedUser.getEmail())
+                    .build();
+            employerRepository.save(profile);
+        }
+
+
         return savedUser;
     }
 
