@@ -3,12 +3,14 @@ package com.sriharyi.skillsail.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sriharyi.skillsail.dto.EmployerDto;
 import com.sriharyi.skillsail.exception.EmployerNotFoundException;
 import com.sriharyi.skillsail.model.EmployerProfile;
 import com.sriharyi.skillsail.repository.EmployerRepository;
 import com.sriharyi.skillsail.service.EmployerService;
+import com.sriharyi.skillsail.service.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class EmployerServiceImpl implements EmployerService {
 
     private final EmployerRepository employerRepository;
+
+    private final FileStorageService fileStorageService;
 
     @Override
     public EmployerDto createEmployer(EmployerDto employerDto) {
@@ -45,7 +49,6 @@ public class EmployerServiceImpl implements EmployerService {
         return mapToEmployerDto(employerProfile);
     }
 
-
     @Override
     public EmployerDto updateEmployer(String id, EmployerDto employerDto) {
         EmployerProfile employerProfile = employerRepository.findById(id)
@@ -54,21 +57,21 @@ public class EmployerServiceImpl implements EmployerService {
             throw new EmployerNotFoundException("Employer not found");
         }
 
-        if(employerDto.getCompanyName() != null)
+        if (employerDto.getCompanyName() != null)
             employerProfile.setCompanyName(employerDto.getCompanyName());
-        if(employerDto.getCompanyEmail() != null)
+        if (employerDto.getCompanyEmail() != null)
             employerProfile.setCompanyEmail(employerDto.getCompanyEmail());
-        if(employerDto.getCompanyWebsite() != null)
+        if (employerDto.getCompanyWebsite() != null)
             employerProfile.setCompanyWebsite(employerDto.getCompanyWebsite());
-        if(employerDto.getCompanyDescription() != null)
+        if (employerDto.getCompanyDescription() != null)
             employerProfile.setCompanyDescription(employerDto.getCompanyDescription());
-        if(employerDto.getCompanyLogo() != null)
+        if (employerDto.getCompanyLogo() != null)
             employerProfile.setCompanyLogo(employerDto.getCompanyLogo());
-        if(employerDto.getCompanyLocation() != null)
+        if (employerDto.getCompanyLocation() != null)
             employerProfile.setCompanyLocation(employerDto.getCompanyLocation());
-        if(employerDto.getCompanyIndustry() != null)
+        if (employerDto.getCompanyIndustry() != null)
             employerProfile.setCompanyIndustry(employerDto.getCompanyIndustry());
-        if(employerDto.isVerified())
+        if (employerDto.isVerified())
             employerProfile.setVerified(true);
         System.out.println(employerProfile);
 
@@ -82,6 +85,20 @@ public class EmployerServiceImpl implements EmployerService {
                 .orElseThrow(() -> new EmployerNotFoundException("Employer not found"));
         employerProfile.setDeleted(true);
         employerRepository.save(employerProfile);
+    }
+
+    @Override
+    public String updateEmployerProfilePicture(String id, MultipartFile profilePicture) {
+        EmployerProfile employerProfile = employerRepository.findById(id)
+                .orElseThrow(() -> new EmployerNotFoundException("Employer not found"));
+        if (employerProfile.isDeleted()) {
+            throw new EmployerNotFoundException("Employer not found");
+        }
+        String folderName = "company-logos";
+        String imagePath = fileStorageService.storeFile(profilePicture, folderName);
+        employerProfile.setCompanyLogo(imagePath);
+        employerRepository.save(employerProfile);
+        return imagePath;
     }
 
     protected EmployerDto mapToEmployerDto(EmployerProfile employerProfile) {
@@ -111,4 +128,5 @@ public class EmployerServiceImpl implements EmployerService {
                 .verified(employerDto.isVerified())
                 .build();
     }
+
 }

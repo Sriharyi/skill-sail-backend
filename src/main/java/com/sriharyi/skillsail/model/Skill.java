@@ -33,7 +33,7 @@ public class Skill {
 
     private String description;
     
-    @DocumentReference(collection = "questions",lazy = true)
+    @DocumentReference(collection = "questions",lazy = false)
     private Set<Question> questions;
     
     private boolean deleted;

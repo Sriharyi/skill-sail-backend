@@ -1,17 +1,18 @@
 package com.sriharyi.skillsail.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.sriharyi.skillsail.dto.FreelancerProfileDto;
 import com.sriharyi.skillsail.exception.FreeLancerProfileNotFoundException;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.repository.FreeLancerProfileRepository;
 import com.sriharyi.skillsail.service.FileStorageService;
 import com.sriharyi.skillsail.service.FreeLancerProfileService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

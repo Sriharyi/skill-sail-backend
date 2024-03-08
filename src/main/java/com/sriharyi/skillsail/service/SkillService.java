@@ -22,4 +22,6 @@ public interface SkillService   {
 
 
     Page<SkillDto> getSkillsByPage(Pageable pageable);
+
+    List<SkillDto> getSkillsByCategory(String category);
 }

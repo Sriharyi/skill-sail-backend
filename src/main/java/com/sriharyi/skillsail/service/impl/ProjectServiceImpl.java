@@ -70,14 +70,16 @@ public class ProjectServiceImpl implements ProjectService {
     protected ProjectDto mapToProjectDto(Project project) {
         return ProjectDto.builder()
                 .id(project.getId())
-                .employerProfile(project.getEmployerProfile())
+                .employerProfileId(project.getEmployerProfileId())
                 .selectedFreelancerId(project.getSelectedFreelancerId())
                 .title(project.getTitle())
                 .description(project.getDescription())
+                .category(project.getCategory())
                 .skills(project.getSkills())
                 .budget(project.getBudget())
                 .status(project.getStatus().name())
                 .deadline(project.getDeadline())
+                .bidDeadline(project.getBidDeadline())
                 .build();
     }
     
@@ -85,14 +87,16 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectStatus status = projectDto.getStatus() == null ? ProjectStatus.OPEN : ProjectStatus.valueOf(projectDto.getStatus());
         return Project.builder()
                 .id(projectDto.getId())
-                .employerProfile(projectDto.getEmployerProfile())
+                .employerProfileId(projectDto.getEmployerProfileId())
                 .selectedFreelancerId(projectDto.getSelectedFreelancerId())
                 .title(projectDto.getTitle())
                 .description(projectDto.getDescription())
+                .category(projectDto.getCategory())
                 .skills(projectDto.getSkills())
                 .budget(projectDto.getBudget())
                 .status(status)
                 .deadline(projectDto.getDeadline())
+                .bidDeadline(projectDto.getBidDeadline())
                 .build();
     }
 }

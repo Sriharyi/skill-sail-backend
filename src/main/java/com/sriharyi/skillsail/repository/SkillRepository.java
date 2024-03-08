@@ -14,4 +14,6 @@ public interface SkillRepository extends MongoRepository<Skill,String> {
     List<Skill> findAllByDeletedIsFalse();
 
     Page<Skill> findAllByDeletedIsFalse(Pageable pageable);
+
+    List<Skill> findAllByCategoryAndDeletedIsFalse(String category);
 }

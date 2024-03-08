@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -45,6 +46,12 @@ public class EmployerController {
     public ResponseEntity<String> deleteEmployer(@PathVariable String id) {
         employerService.deleteEmployer(id);
         return new ResponseEntity<>("Successfully Deleted",HttpStatus.OK);
+    }
+
+    @PutMapping("updateimage/{id}")
+    public ResponseEntity<String> updateFreeLancerProfilePicture(@PathVariable String id,@RequestParam("image") MultipartFile profilePicture) {
+           String imagePath = employerService.updateEmployerProfilePicture(id, profilePicture);
+           return new ResponseEntity<String>(imagePath, HttpStatus.OK);
     }
 
 

@@ -66,5 +66,11 @@ public class SkillController {
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<List<SkillDto>> getSkillsByCategory(@RequestParam String category) {
+        List<SkillDto> skills = skillService.getSkillsByCategory(category);
+        return new ResponseEntity<>(skills, HttpStatus.OK);
+    }
+
 
 }

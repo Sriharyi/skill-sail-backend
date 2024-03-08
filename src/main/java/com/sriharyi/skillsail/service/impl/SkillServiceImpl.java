@@ -149,4 +149,12 @@ public class SkillServiceImpl implements SkillService {
                 .type(questionDto.getType())
                 .build();
     }
+
+    @Override
+    public List<SkillDto> getSkillsByCategory(String category) {
+        List<Skill> skills = skillRepository.findAllByCategoryAndDeletedIsFalse(category);
+        return skills.stream()
+                .map(this::mapToSkillDto)
+                .toList();
+    }
 }

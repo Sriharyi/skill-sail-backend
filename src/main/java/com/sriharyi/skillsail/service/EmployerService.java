@@ -4,6 +4,8 @@ import com.sriharyi.skillsail.dto.EmployerDto;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface EmployerService {
     EmployerDto createEmployer(EmployerDto employerDto);
 
@@ -14,4 +16,6 @@ public interface EmployerService {
     EmployerDto updateEmployer(String id, EmployerDto employerDto);
 
     void deleteEmployer(String id);
+
+    String updateEmployerProfilePicture(String id, MultipartFile profilePicture);
 }
