@@ -1,26 +1,34 @@
 package com.sriharyi.skillsail.service.impl;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.sriharyi.skillsail.dto.ProjectDto;
 import com.sriharyi.skillsail.exception.ProjectNotFoundException;
 import com.sriharyi.skillsail.model.Project;
 import com.sriharyi.skillsail.model.enums.ProjectStatus;
 import com.sriharyi.skillsail.repository.ProjectRepository;
 import com.sriharyi.skillsail.service.ProjectService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
-    private  final ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
+
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
-        Project project =  mapToProject(projectDto);
-        project =  projectRepository.save(project);
+        Project project = mapToProject(projectDto);
+        project = projectRepository.save(project);
         return mapToProjectDto(project);
 
     }
@@ -37,7 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDto getProjectById(String id) {
         Project project = projectRepository.findById(id).orElseThrow(
                 () -> new ProjectNotFoundException("Project not found "));
-        if(project.isDeleted()){
+        if (project.isDeleted()) {
             throw new ProjectNotFoundException("Project not found ");
         }
         return mapToProjectDto(project);
@@ -47,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDto updateProject(String id, ProjectDto projectDto) {
         Project project = projectRepository.findById(id).orElseThrow(
                 () -> new ProjectNotFoundException("Project not found "));
-        if(project.isDeleted()){
+        if (project.isDeleted()) {
             throw new ProjectNotFoundException("Project not found ");
         }
         project = mapToProject(projectDto);
@@ -60,7 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void deleteProject(String id) {
         Project project = projectRepository.findById(id).orElseThrow(
                 () -> new ProjectNotFoundException("Project not found "));
-        if(project.isDeleted()){
+        if (project.isDeleted()) {
             throw new ProjectNotFoundException("Project not found ");
         }
         project.setDeleted(true);
@@ -82,9 +90,10 @@ public class ProjectServiceImpl implements ProjectService {
                 .bidDeadline(project.getBidDeadline())
                 .build();
     }
-    
+
     protected Project mapToProject(ProjectDto projectDto) {
-        ProjectStatus status = projectDto.getStatus() == null ? ProjectStatus.OPEN : ProjectStatus.valueOf(projectDto.getStatus());
+        ProjectStatus status = projectDto.getStatus() == null ? ProjectStatus.OPEN
+                : ProjectStatus.valueOf(projectDto.getStatus());
         return Project.builder()
                 .id(projectDto.getId())
                 .employerProfileId(projectDto.getEmployerProfileId())
@@ -99,4 +108,20 @@ public class ProjectServiceImpl implements ProjectService {
                 .bidDeadline(projectDto.getBidDeadline())
                 .build();
     }
+
+    @Override
+    public Page<ProjectDto> getProjectsByPage(Pageable pageable) {
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities();
+
+        boolean isAdmin = authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return projectRepository.findAll(pageable).map(this::mapToProjectDto);
+        }else {
+            Page<Project> projects = projectRepository.findAllByDeletedFalseAndStatus(pageable, ProjectStatus.OPEN.name());
+            return projects.map(this::mapToProjectDto);
+        }
+    }
+
 }

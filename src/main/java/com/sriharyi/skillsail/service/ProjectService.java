@@ -4,6 +4,9 @@ import com.sriharyi.skillsail.dto.ProjectDto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface ProjectService {
 
     ProjectDto createProject(ProjectDto projectDto);
@@ -15,4 +18,6 @@ public interface ProjectService {
     ProjectDto updateProject(String id, ProjectDto projectDto);
 
     void deleteProject(String id);
+
+    Page<ProjectDto> getProjectsByPage(Pageable pageable);
 }

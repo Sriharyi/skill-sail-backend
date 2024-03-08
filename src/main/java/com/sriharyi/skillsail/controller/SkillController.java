@@ -60,7 +60,6 @@ public class SkillController {
 
     @GetMapping("/page")
     public ResponseEntity<Page<SkillDto>> getSkillsByPage(@RequestParam int page, @RequestParam int size) {
-        log.info("Page: " + page + " Size: " + size);
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<SkillDto> skills = skillService.getSkillsByPage(pageable);
         return new ResponseEntity<>(skills, HttpStatus.OK);
