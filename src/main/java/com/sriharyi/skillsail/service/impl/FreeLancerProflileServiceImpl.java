@@ -54,8 +54,22 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         if (freeLancerProfile.isDeleted()) {
             throw new FreeLancerProfileNotFoundException("FreeLancerProfile not found");
         }
-        freelancerProfileDto.setId(id);
-        FreeLancerProfile updatedFreeLancerProfile = freeLancerProfileRepository.save(convertToEntity(freelancerProfileDto));
+        if(freelancerProfileDto.getDisplayName() != null)
+            freeLancerProfile.setDisplayName(freelancerProfileDto.getDisplayName());
+        if(freelancerProfileDto.getUserName() != null)
+            freeLancerProfile.setUserName(freelancerProfileDto.getUserName());
+        if(freelancerProfileDto.getDescription() != null)
+            freeLancerProfile.setDescription(freelancerProfileDto.getDescription());
+        if(freelancerProfileDto.getEducations() != null)
+            freeLancerProfile.setEducations(freelancerProfileDto.getEducations());
+        if(freelancerProfileDto.getSkills() != null)
+            freeLancerProfile.setSkills(freelancerProfileDto.getSkills());
+        if(freelancerProfileDto.getRatings() != null)
+            freeLancerProfile.setRatings(freelancerProfileDto.getRatings());
+        if(freelancerProfileDto.isVerified())
+            freeLancerProfile.setVerified(freelancerProfileDto.isVerified());
+        FreeLancerProfile updatedFreeLancerProfile = freeLancerProfileRepository.save(freeLancerProfile);
+    
         return convertToDto(updatedFreeLancerProfile);
     }
 
@@ -88,11 +102,11 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         return FreeLancerProfile.builder()
                 .id(freelancerProfileDto.getId())
                 .displayName(freelancerProfileDto.getDisplayName())
+                .profilePic(freelancerProfileDto.getProfilePic())
                 .userName(freelancerProfileDto.getUserName())
                 .description(freelancerProfileDto.getDescription())
-                .education(freelancerProfileDto.getEducation())
+                .educations(freelancerProfileDto.getEducations())
                 .skills(freelancerProfileDto.getSkills())
-                .skillsEarned(freelancerProfileDto.getSkillsEarned())
                 .ratings(freelancerProfileDto.getRatings())
                 .verified(freelancerProfileDto.isVerified())
                 .build();
@@ -102,11 +116,11 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         return FreelancerProfileDto.builder()
                 .id(freeLancerProfile.getId())
                 .displayName(freeLancerProfile.getDisplayName())
+                .profilePic(freeLancerProfile.getProfilePic())
                 .userName(freeLancerProfile.getUserName())
                 .description(freeLancerProfile.getDescription())
-                .education(freeLancerProfile.getEducation())
+                .educations(freeLancerProfile.getEducations())
                 .skills(freeLancerProfile.getSkills())
-                .skillsEarned(freeLancerProfile.getSkillsEarned())
                 .ratings(freeLancerProfile.getRatings())
                 .verified(freeLancerProfile.isVerified())
                 .build();

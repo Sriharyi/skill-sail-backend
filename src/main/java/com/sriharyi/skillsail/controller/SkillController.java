@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/skills")
 @CrossOrigin(origins = "http://localhost:4200")
-@Slf4j
 public class SkillController {
 
     private final SkillService skillService;
@@ -64,7 +63,7 @@ public class SkillController {
         Page<SkillDto> skills = skillService.getSkillsByPage(pageable);
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
-
+ 
     @GetMapping("/category")
     public ResponseEntity<List<SkillDto>> getSkillsByCategory(@RequestParam String category) {
         List<SkillDto> skills = skillService.getSkillsByCategory(category);

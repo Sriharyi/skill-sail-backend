@@ -20,7 +20,6 @@ public interface SkillService   {
 
     QuestionDto createQuestion(String id, QuestionDto questionDto);
 
-
     Page<SkillDto> getSkillsByPage(Pageable pageable);
 
     List<SkillDto> getSkillsByCategory(String category);

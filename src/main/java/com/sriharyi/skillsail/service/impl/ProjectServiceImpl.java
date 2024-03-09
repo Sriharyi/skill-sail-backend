@@ -11,9 +11,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.sriharyi.skillsail.dto.ProjectDto;
+import com.sriharyi.skillsail.exception.EmployerNotFoundException;
 import com.sriharyi.skillsail.exception.ProjectNotFoundException;
+import com.sriharyi.skillsail.model.EmployerProfile;
+import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.model.Project;
 import com.sriharyi.skillsail.model.enums.ProjectStatus;
+import com.sriharyi.skillsail.repository.EmployerRepository;
 import com.sriharyi.skillsail.repository.ProjectRepository;
 import com.sriharyi.skillsail.service.ProjectService;
 
@@ -24,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+
+    private final EmployerRepository employerProfileRepository;
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
@@ -78,8 +84,8 @@ public class ProjectServiceImpl implements ProjectService {
     protected ProjectDto mapToProjectDto(Project project) {
         return ProjectDto.builder()
                 .id(project.getId())
-                .employerProfileId(project.getEmployerProfileId())
-                .selectedFreelancerId(project.getSelectedFreelancerId())
+                .employerProfileId(project.getEmployerProfileId().getId())
+                .selectedFreelancerId(project.getSelectedFreelancerId().getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .category(project.getCategory())
@@ -94,10 +100,14 @@ public class ProjectServiceImpl implements ProjectService {
     protected Project mapToProject(ProjectDto projectDto) {
         ProjectStatus status = projectDto.getStatus() == null ? ProjectStatus.OPEN
                 : ProjectStatus.valueOf(projectDto.getStatus());
+        EmployerProfile employerProfile = EmployerProfile.builder().id(projectDto.getEmployerProfileId())
+                .build();
+        FreeLancerProfile freeLancerProfile = FreeLancerProfile.builder().id(projectDto.getSelectedFreelancerId())
+                .build();
         return Project.builder()
                 .id(projectDto.getId())
-                .employerProfileId(projectDto.getEmployerProfileId())
-                .selectedFreelancerId(projectDto.getSelectedFreelancerId())
+                .employerProfileId(employerProfile)
+                .selectedFreelancerId(freeLancerProfile)
                 .title(projectDto.getTitle())
                 .description(projectDto.getDescription())
                 .category(projectDto.getCategory())
@@ -118,8 +128,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (isAdmin) {
             return projectRepository.findAll(pageable).map(this::mapToProjectDto);
-        }else {
-            Page<Project> projects = projectRepository.findAllByDeletedFalseAndStatus(pageable, ProjectStatus.OPEN.name());
+        } else {
+            Page<Project> projects = projectRepository.findAllByDeletedFalseAndStatus(pageable,
+                    ProjectStatus.OPEN.name());
             return projects.map(this::mapToProjectDto);
         }
     }

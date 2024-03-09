@@ -26,7 +26,7 @@ public class FreeLancerProfile {
     private String displayName;
     private String userName;
     private String description;
-    private List<Education> education;
+    private List<Education> educations;
     private List<String> skills;
     private List<Skill> skillsEarned; // skills that the freelancer has earned from assessments
     private List<Rating> ratings;

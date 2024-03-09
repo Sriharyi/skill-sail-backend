@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectDto {
     private String id;
-    private EmployerProfile employerProfileId;
-    private FreeLancerProfile selectedFreelancerId;
+    private String employerProfileId;
+    private String selectedFreelancerId;
     private String title;
     private String description;
     private String category;

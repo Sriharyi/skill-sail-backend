@@ -24,7 +24,7 @@ public class Bid {
     private String projectId;
     @DocumentReference(collection = "freelancers",lazy = true)
     private String freelancerId;
-    private Double amount;
+    private Double bidAmount;
     private String proposal;
     private boolean accepted;
     
