@@ -1,11 +1,14 @@
 package com.sriharyi.skillsail.service;
 
-import com.sriharyi.skillsail.model.Bid;
-
 import java.util.List;
 
+import com.sriharyi.skillsail.dto.BidDto;
+import com.sriharyi.skillsail.dto.BidRequest;
+import com.sriharyi.skillsail.model.Bid;
+
 public interface BidService {
-    Bid createBid(Bid bid);
+
+    BidDto createBid(BidRequest bidRequest);
 
     List<Bid> getAllBids();
 

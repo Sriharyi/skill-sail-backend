@@ -1,5 +1,7 @@
 package com.sriharyi.skillsail.controller;
 
+import com.sriharyi.skillsail.dto.BidDto;
+import com.sriharyi.skillsail.dto.BidRequest;
 import com.sriharyi.skillsail.model.Bid;
 import com.sriharyi.skillsail.service.BidService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,8 @@ public class BidController {
     private final BidService bidService;
 
     @PostMapping
-    public ResponseEntity<Bid> createBid(@RequestBody Bid bid) {
-        Bid createdBid = bidService.createBid(bid);
+    public ResponseEntity<BidDto> createBid(@RequestBody BidRequest bidRequest) {
+        BidDto createdBid = bidService.createBid(bidRequest);
         return new ResponseEntity<>(createdBid, HttpStatus.CREATED);
     }
 

@@ -21,9 +21,9 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 public class Bid {
     private String id;
     @DocumentReference(collection = "projects",lazy = true)
-    private String projectId;
+    private Project projectId;
     @DocumentReference(collection = "freelancers",lazy = true)
-    private String freelancerId;
+    private FreeLancerProfile freelancerId;
     private Double bidAmount;
     private String proposal;
     private boolean accepted;
