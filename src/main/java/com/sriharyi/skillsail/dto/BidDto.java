@@ -8,14 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Education {
-        private String location;
-        private String collegeName;
-        private String degree;
-        private String major;
-        private Integer graduationYear;
+public class BidDto {
+    private String id;
+    private String projectId;
+    private String freelancerId;
+    private String proposal;
+    private double bidAmount;
+    private String bidStatus;
 }

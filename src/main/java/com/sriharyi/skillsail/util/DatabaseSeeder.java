@@ -26,7 +26,7 @@ public class DatabaseSeeder {
     @Value("${application.user.permissions}")
     private String[] permissions;
 
-    @PostConstruct
+    // @PostConstruct
     public void seedDatabase()
     {
         SeedPermissions();
