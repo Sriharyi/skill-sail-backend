@@ -45,6 +45,8 @@ public class Project {
     @Field(targetType = FieldType.STRING)
     private ProjectStatus status;
 
+    private Double bidAmount;
+
     private LocalDateTime deadline;
 
     private LocalDateTime bidDeadline;

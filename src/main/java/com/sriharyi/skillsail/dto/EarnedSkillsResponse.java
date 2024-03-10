@@ -1,5 +1,7 @@
 package com.sriharyi.skillsail.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -12,11 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BidDto {
-    private String id;
-    private String projectId;
-    private String freelancerId;
-    private String proposal;
-    private double bidAmount;
-    private String bidStatus;
+public class EarnedSkillsResponse {
+    private List<String> skills;
 }

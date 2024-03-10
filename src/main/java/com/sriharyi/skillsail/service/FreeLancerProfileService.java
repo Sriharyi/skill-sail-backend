@@ -1,5 +1,6 @@
 package com.sriharyi.skillsail.service;
 
+import com.sriharyi.skillsail.dto.EarnedSkillsResponse;
 import com.sriharyi.skillsail.dto.FreelancerProfileDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,4 +20,6 @@ public interface FreeLancerProfileService {
     void deleteFreeLancerProfile(String id);
 
     String updateFreeLancerProfilePicture(String id, MultipartFile profilePicture);
+
+    EarnedSkillsResponse getSkillsByFreeLancerProfileId(String id);
 }

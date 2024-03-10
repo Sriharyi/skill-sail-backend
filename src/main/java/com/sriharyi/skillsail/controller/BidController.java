@@ -3,6 +3,7 @@ package com.sriharyi.skillsail.controller;
 import com.sriharyi.skillsail.dto.BidDto;
 import com.sriharyi.skillsail.dto.BidRequest;
 import com.sriharyi.skillsail.dto.EmployerBidResponse;
+import com.sriharyi.skillsail.dto.FreelancerBidResponse;
 import com.sriharyi.skillsail.model.Bid;
 import com.sriharyi.skillsail.service.BidService;
 import lombok.RequiredArgsConstructor;
@@ -62,11 +63,11 @@ public class BidController {
         return new ResponseEntity<>(hired, HttpStatus.OK);
     }
 
-//    @GetMapping("/freelancer/{freelancerId}")
-//    public ResponseEntity<List<Bid>> getBidsByFreelancerId(@PathVariable String freelancerId) {
-//        List<Bid> bids = bidService.getBidsByFreelancerId(freelancerId);
-//        return new ResponseEntity<>(bids, HttpStatus.OK);
-//    }
+   @GetMapping("/freelancer/{freelancerId}")
+   public ResponseEntity<List<FreelancerBidResponse>> getBidsByFreelancerId(@PathVariable String freelancerId) {
+       List<FreelancerBidResponse> bids = bidService.getBidsByFreelancerId(freelancerId);
+       return new ResponseEntity<>(bids, HttpStatus.OK);
+   }
 //
 //    @GetMapping("/project/{projectId}")
 //    public ResponseEntity<List<Bid>> getBidsByProjectId(@PathVariable String projectId) {

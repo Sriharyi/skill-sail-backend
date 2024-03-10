@@ -3,11 +3,13 @@ package com.sriharyi.skillsail.service.impl;
 import com.sriharyi.skillsail.dto.AssessmentDto;
 import com.sriharyi.skillsail.dto.CanTakeTest;
 import com.sriharyi.skillsail.exception.AssesmentNotFoundException;
+import com.sriharyi.skillsail.exception.FreeLancerProfileNotFoundException;
 import com.sriharyi.skillsail.model.Assessment;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.model.Skill;
 import com.sriharyi.skillsail.model.enums.TestStatus;
 import com.sriharyi.skillsail.repository.AssessmentRepository;
+import com.sriharyi.skillsail.repository.FreeLancerProfileRepository;
 import com.sriharyi.skillsail.service.AssessmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,8 @@ import java.util.Optional;
 public class AssessmentServiceImpl implements AssessmentService {
 
     private final AssessmentRepository assessmentRepository;
+
+    private final FreeLancerProfileRepository freeLancerProfileRepository;
 
     @Override
     public AssessmentDto createAssessment(AssessmentDto assessmentDto) {
@@ -59,6 +63,16 @@ public class AssessmentServiceImpl implements AssessmentService {
             throw new AssesmentNotFoundException("Assessment not found ");
         }
         assessmentDto.setId(id);
+        String freelancerId = assessmentDto.getFreelancerId();
+        String skillId = assessmentDto.getSkillId();
+        if (freelancerId != null) {
+            FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(freelancerId).orElseThrow(
+                    () -> new FreeLancerProfileNotFoundException("Freelancer profile not found ")
+            );
+            freeLancerProfile.setSkillsEarned(List.of(Skill.builder().id(skillId).build()));
+            freeLancerProfileRepository.save(freeLancerProfile);
+        }
+
         Assessment updatedAssessment = assessmentRepository.save(mapToAssessment(assessmentDto));
         return mapToAssessmentDto(updatedAssessment);
     }

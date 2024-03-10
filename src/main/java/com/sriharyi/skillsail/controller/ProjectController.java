@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
 import com.sriharyi.skillsail.service.ProjectService;
 
@@ -70,6 +71,12 @@ public class ProjectController {
     @GetMapping("/employer/{employerId}")
     public ResponseEntity<List<ProjectDto>> getProjectsByEmployerId(@PathVariable String employerId) {
         List<ProjectDto> projects = projectService.getProjectsByEmployerId(employerId);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    @GetMapping("/freelancer/{freelancerId}")
+    public ResponseEntity<List<OrderCardResponse>> getProjectsByFreelancerId(@PathVariable String freelancerId) {
+        List<OrderCardResponse> projects = projectService.getProjectsByFreelancerId(freelancerId);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 

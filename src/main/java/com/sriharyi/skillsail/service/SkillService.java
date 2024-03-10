@@ -23,4 +23,6 @@ public interface SkillService   {
     Page<SkillDto> getSkillsByPage(Pageable pageable);
 
     List<SkillDto> getSkillsByCategory(String category);
+
+    Boolean enableSkill(String id, Boolean isChecked);
 }

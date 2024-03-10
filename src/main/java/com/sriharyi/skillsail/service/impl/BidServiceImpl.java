@@ -1,25 +1,33 @@
 package com.sriharyi.skillsail.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.sriharyi.skillsail.dto.BidDto;
 import com.sriharyi.skillsail.dto.BidRequest;
 import com.sriharyi.skillsail.dto.EmployerBidResponse;
+import com.sriharyi.skillsail.dto.FreelancerBidResponse;
 import com.sriharyi.skillsail.exception.BidNotFoundException;
+import com.sriharyi.skillsail.exception.ProjectNotFoundException;
 import com.sriharyi.skillsail.model.Bid;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.model.Project;
-import com.sriharyi.skillsail.model.Rating;
+import com.sriharyi.skillsail.model.enums.BidStatus;
+import com.sriharyi.skillsail.model.enums.ProjectStatus;
 import com.sriharyi.skillsail.repository.BidRepository;
+import com.sriharyi.skillsail.repository.ProjectRepository;
 import com.sriharyi.skillsail.service.BidService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class BidServiceImpl implements BidService {
 
     private final BidRepository bidRepository;
+
+    private final ProjectRepository projectRepository;
 
     @Override
     public BidDto createBid(BidRequest bidRequest) {
@@ -73,7 +81,7 @@ public class BidServiceImpl implements BidService {
                 .freelancerId(bid.getFreelancerId().getId())
                 .bidAmount(bid.getBidAmount())
                 .proposal(bid.getProposal())
-                .accepted(bid.isAccepted())
+                .bidStatus( bid.getBidStatus().name())
                 .build();
     }
 
@@ -86,7 +94,7 @@ public class BidServiceImpl implements BidService {
                 .freelancerId(freeLancerProfile)
                 .bidAmount(bidRequest.getBidAmount())
                 .proposal(bidRequest.getProposal())
-                .accepted(false)
+                .bidStatus(BidStatus.PENDING)
                 .deleted(false)
                 .build();
     }
@@ -122,8 +130,55 @@ public class BidServiceImpl implements BidService {
         if (existingBid.isDeleted()) {
             throw new BidNotFoundException("Bid not found");
         }
-        existingBid.setAccepted(true);
+        existingBid.setBidStatus(BidStatus.ACCEPTED);
         bidRepository.save(existingBid);
+        String projectId = existingBid.getProjectId().getId();
+        //update project status
+        Project project = projectRepository.findById(projectId).orElseThrow(
+            () -> new ProjectNotFoundException("Project not found"));
+        
+        project.setStatus(ProjectStatus.ACTIVE);
+        project.setSelectedFreelancerId(existingBid.getFreelancerId());
+        project.setBidAmount(existingBid.getBidAmount());
+        projectRepository.save(project);
+
+
+        List<Bid> otherBids = bidRepository.findAllByProjectId_Id(projectId);
+
+        for (Bid bid : otherBids){
+            if(bid.getBidStatus().equals(BidStatus.PENDING))
+            {
+                bid.setBidStatus(BidStatus.REJECTED);
+            }
+        }
+        bidRepository.saveAll(otherBids);
         return true;
     }
+    
+    @Override
+    public List<FreelancerBidResponse> getBidsByFreelancerId(String freelancerId) {
+        List<Bid> bids = bidRepository.findAllByFreelancerId_Id(freelancerId);
+        return convertToFreelancerBidResponse(bids);
+    }
+
+    private List<FreelancerBidResponse> convertToFreelancerBidResponse(List<Bid> bids) {
+        List<FreelancerBidResponse> response = bids.stream().map(
+                (bid) -> {
+                    FreelancerBidResponse bidResponse = FreelancerBidResponse.builder()
+                            .id(bid.getId())
+                            .projectId(bid.getProjectId().getId())
+                            .projectName(bid.getProjectId().getTitle())
+                            .companyName(bid.getProjectId().getEmployerProfileId().getCompanyName())
+                            .BidDeadline(bid.getProjectId().getBidDeadline())
+                            .bidAmount(bid.getBidAmount())
+                            .status(bid.getBidStatus().name())
+                            .build();
+                    return bidResponse;
+
+                }).toList();
+        return response;
+    }
+
+
+    
 }

@@ -1,6 +1,7 @@
 package com.sriharyi.skillsail.controller;
 
 
+import com.sriharyi.skillsail.dto.EarnedSkillsResponse;
 import com.sriharyi.skillsail.dto.FreelancerProfileDto;
 import com.sriharyi.skillsail.service.FreeLancerProfileService;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +56,10 @@ public class FreeLancerProfileController {
         return new ResponseEntity<>("Successfully Deleted",HttpStatus.OK);
     }
 
+    @GetMapping("/skills/{id}")
+    public ResponseEntity<EarnedSkillsResponse> getSkillsByFreeLancerProfileId(@PathVariable String id) {
+        EarnedSkillsResponse skills = freeLancerProfileService.getSkillsByFreeLancerProfileId(id);
+        return new ResponseEntity<>(skills, HttpStatus.OK);
+    }
 
 }

@@ -70,5 +70,11 @@ public class SkillController {
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
+    @PutMapping("/enable/{id}")
+    public ResponseEntity<Boolean> enableSkill(@PathVariable String id, @RequestBody Boolean isChecked) {
+        Boolean isEnabled = skillService.enableSkill(id, isChecked);
+        return new ResponseEntity<>(isEnabled, HttpStatus.OK);
+    }
+
 
 }

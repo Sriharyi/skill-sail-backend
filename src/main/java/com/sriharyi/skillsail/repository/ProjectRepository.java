@@ -16,4 +16,6 @@ public interface ProjectRepository extends MongoRepository<Project, String>{
     Page<Project> findAllByDeletedFalseAndStatus(Pageable pageable, String status);
 
     List<Project> findAllByEmployerProfileId_IdAndDeletedFalse(String employerId);
+
+    List<Project> findAllBySelectedFreelancerId_IdAndDeletedFalse(String freelancerId);
 }

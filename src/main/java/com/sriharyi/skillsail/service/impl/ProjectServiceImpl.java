@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
 import com.sriharyi.skillsail.exception.EmployerNotFoundException;
 import com.sriharyi.skillsail.exception.ProjectNotFoundException;
@@ -141,6 +142,27 @@ public class ProjectServiceImpl implements ProjectService {
         return projects.stream()
                 .map(this::mapToProjectDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderCardResponse> getProjectsByFreelancerId(String freelancerId) {
+        List<Project> projects = projectRepository.findAllBySelectedFreelancerId_IdAndDeletedFalse(freelancerId);
+        return convertToOrderCardResponse(projects);
+    }
+
+    private List<OrderCardResponse> convertToOrderCardResponse(List<Project> projects) {
+        return projects.stream().map(
+            (project) -> OrderCardResponse.builder()
+                    .id(project.getId())
+                    .title(project.getTitle())
+                    .description(project.getDescription())
+                    .category(project.getCategory())
+                    .skills(project.getSkills().toArray(new String[0]))
+                    .bidAmount(project.getBidAmount())
+                    .status(project.getStatus().name())
+                    .deadline(project.getDeadline())
+                    .build()    
+        ).collect(Collectors.toList());
     }
 
 }

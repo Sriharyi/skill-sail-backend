@@ -1,14 +1,19 @@
 package com.sriharyi.skillsail.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sriharyi.skillsail.dto.EarnedSkillsResponse;
 import com.sriharyi.skillsail.dto.FreelancerProfileDto;
 import com.sriharyi.skillsail.exception.FreeLancerProfileNotFoundException;
+import com.sriharyi.skillsail.exception.SkillNotFoundException;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
+import com.sriharyi.skillsail.model.Skill;
 import com.sriharyi.skillsail.repository.FreeLancerProfileRepository;
+import com.sriharyi.skillsail.repository.SkillRepository;
 import com.sriharyi.skillsail.service.FileStorageService;
 import com.sriharyi.skillsail.service.FreeLancerProfileService;
 
@@ -20,7 +25,10 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
 
     private final FreeLancerProfileRepository freeLancerProfileRepository;
 
+    private final SkillRepository skillRepository;
+
     private final FileStorageService fileStorageService;
+
     
     @Override
     public FreelancerProfileDto createFreeLancerProfile(FreelancerProfileDto freelancerProfileDto) {
@@ -96,6 +104,35 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         freeLancerProfile.setProfilePic(imagePath);
         freeLancerProfileRepository.save(freeLancerProfile);
         return imagePath;
+    }
+
+    @Override
+    public EarnedSkillsResponse getSkillsByFreeLancerProfileId(String id) {
+        FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(id).orElseThrow(
+                () -> new FreeLancerProfileNotFoundException("FreeLancerProfile not found")
+        );
+        if (freeLancerProfile.isDeleted()) {
+            throw new FreeLancerProfileNotFoundException("FreeLancerProfile not found");
+        }
+
+
+        List<Skill> skills  = freeLancerProfile.getSkillsEarned();
+        List<Skill> actualSkills = new ArrayList<>();
+
+        if(skills == null) return EarnedSkillsResponse.builder().skills(new ArrayList<>()).build();
+        for (Skill skill : skills) {
+            Skill actualSkill = skillRepository.findById(skill.getId()).orElseThrow(
+                    () -> new SkillNotFoundException("Skill not found")
+            );
+            actualSkills.add(actualSkill);
+        }
+
+        
+
+        EarnedSkillsResponse earnedSkillsResponse = EarnedSkillsResponse.builder()
+                .skills(actualSkills.stream().map( skill -> skill.getName()).toList())
+                .build();
+        return earnedSkillsResponse;
     }
 
     protected FreeLancerProfile convertToEntity(FreelancerProfileDto freelancerProfileDto) {

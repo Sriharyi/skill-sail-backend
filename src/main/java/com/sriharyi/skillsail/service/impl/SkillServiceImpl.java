@@ -108,6 +108,16 @@ public class SkillServiceImpl implements SkillService {
         return skills.map(this::mapToSkillDto);
     }
 
+    @Override
+    public Boolean enableSkill(String id, Boolean isChecked) {
+        Skill skill = skillRepository.findById(id).orElseThrow(
+                () -> new SkillNotFoundException("Skill not found")
+        );
+        skill.setEnable(isChecked);
+        skillRepository.save(skill);
+        return true;
+    }
+
     protected Skill mapToSkill(SkillDto skillDto) {
         return Skill.builder()
                 .id(skillDto.getId())

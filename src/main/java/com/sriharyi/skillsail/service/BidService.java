@@ -5,6 +5,7 @@ import java.util.List;
 import com.sriharyi.skillsail.dto.BidDto;
 import com.sriharyi.skillsail.dto.BidRequest;
 import com.sriharyi.skillsail.dto.EmployerBidResponse;
+import com.sriharyi.skillsail.dto.FreelancerBidResponse;
 import com.sriharyi.skillsail.model.Bid;
 
 public interface BidService {
@@ -22,4 +23,6 @@ public interface BidService {
     List<EmployerBidResponse> getBidsByProjectId(String projectId);
 
     Boolean hireFreelancer(String id);
+
+    List<FreelancerBidResponse> getBidsByFreelancerId(String freelancerId);
 }

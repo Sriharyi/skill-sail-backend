@@ -1,5 +1,6 @@
 package com.sriharyi.skillsail.service;
 
+import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface ProjectService {
     Page<ProjectDto> getProjectsByPage(Pageable pageable);
 
     List<ProjectDto> getProjectsByEmployerId(String employerId);
+
+    List<OrderCardResponse> getProjectsByFreelancerId(String freelancerId);
 }

@@ -9,4 +9,6 @@ import com.sriharyi.skillsail.model.Bid;
 public interface BidRepository extends MongoRepository<Bid,String> {
 
     List<Bid> findAllByProjectId_Id(String projectId);
+
+    List<Bid> findAllByFreelancerId_Id(String freelancerId);
 }   

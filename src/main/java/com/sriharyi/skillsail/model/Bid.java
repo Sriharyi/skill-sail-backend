@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import com.sriharyi.skillsail.model.enums.BidStatus;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +28,7 @@ public class Bid {
     private FreeLancerProfile freelancerId;
     private Double bidAmount;
     private String proposal;
-    private boolean accepted;
+    private BidStatus bidStatus;
     
     @CreatedDate
     private LocalDateTime createdDate;

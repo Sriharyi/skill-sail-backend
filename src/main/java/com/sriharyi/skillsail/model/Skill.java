@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Document(collection = "skills")
 public class Skill {
+    
     @Id
     private String id;
 
@@ -37,6 +38,8 @@ public class Skill {
     private Set<Question> questions;
     
     private boolean deleted;
+
+    private boolean enable;
 
     @CreatedDate
     private LocalDateTime createdDate;

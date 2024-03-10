@@ -1,5 +1,7 @@
 package com.sriharyi.skillsail.dto;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -8,15 +10,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BidDto {
+public class FreelancerBidResponse {
     private String id;
     private String projectId;
-    private String freelancerId;
-    private String proposal;
-    private double bidAmount;
-    private String bidStatus;
+    private String projectName;
+    private String companyName;
+    private LocalDateTime BidDeadline;
+    private Double bidAmount;
+    private String status;
 }
