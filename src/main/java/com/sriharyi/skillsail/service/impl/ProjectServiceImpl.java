@@ -133,6 +133,14 @@ public class ProjectServiceImpl implements ProjectService {
                     ProjectStatus.OPEN.name());
             return projects.map(this::mapToProjectDto);
         }
+    }   
+
+    @Override
+    public List<ProjectDto> getProjectsByEmployerId(String employerId) {
+        List<Project> projects =  projectRepository.findAllByEmployerProfileId_IdAndDeletedFalse(employerId);
+        return projects.stream()
+                .map(this::mapToProjectDto)
+                .collect(Collectors.toList());
     }
 
 }

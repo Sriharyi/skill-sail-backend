@@ -20,4 +20,6 @@ public interface ProjectService {
     void deleteProject(String id);
 
     Page<ProjectDto> getProjectsByPage(Pageable pageable);
+
+    List<ProjectDto> getProjectsByEmployerId(String employerId);
 }

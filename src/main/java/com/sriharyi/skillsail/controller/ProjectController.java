@@ -67,4 +67,10 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    @GetMapping("/employer/{employerId}")
+    public ResponseEntity<List<ProjectDto>> getProjectsByEmployerId(@PathVariable String employerId) {
+        List<ProjectDto> projects = projectService.getProjectsByEmployerId(employerId);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
 }

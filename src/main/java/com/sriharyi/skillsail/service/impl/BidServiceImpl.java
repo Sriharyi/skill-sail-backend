@@ -1,12 +1,13 @@
 package com.sriharyi.skillsail.service.impl;
 
-
 import com.sriharyi.skillsail.dto.BidDto;
 import com.sriharyi.skillsail.dto.BidRequest;
+import com.sriharyi.skillsail.dto.EmployerBidResponse;
 import com.sriharyi.skillsail.exception.BidNotFoundException;
 import com.sriharyi.skillsail.model.Bid;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.model.Project;
+import com.sriharyi.skillsail.model.Rating;
 import com.sriharyi.skillsail.repository.BidRepository;
 import com.sriharyi.skillsail.service.BidService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BidServiceImpl  implements BidService {
+public class BidServiceImpl implements BidService {
 
     private final BidRepository bidRepository;
 
@@ -24,7 +25,7 @@ public class BidServiceImpl  implements BidService {
     public BidDto createBid(BidRequest bidRequest) {
         Bid bid = convertToEntity(bidRequest);
         Bid savedBid = bidRepository.save(bid);
-        return  convertToDto(savedBid);
+        return convertToDto(savedBid);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class BidServiceImpl  implements BidService {
     public Bid getBidById(String id) {
         Bid bid = bidRepository.findById(id).orElseThrow(
                 () -> new BidNotFoundException("Bid not found"));
-        if(bid.isDeleted()) {
+        if (bid.isDeleted()) {
             throw new BidNotFoundException("Bid not found");
         }
         return bid;
@@ -47,7 +48,7 @@ public class BidServiceImpl  implements BidService {
     public Bid updateBid(String id, Bid bid) {
         Bid existingBid = bidRepository.findById(id).orElseThrow(
                 () -> new BidNotFoundException("Bid not found"));
-        if(existingBid.isDeleted()) {
+        if (existingBid.isDeleted()) {
             throw new BidNotFoundException("Bid not found");
         }
         bid.setId(id);
@@ -58,7 +59,7 @@ public class BidServiceImpl  implements BidService {
     public void deleteBid(String id) {
         Bid existingBid = bidRepository.findById(id).orElseThrow(
                 () -> new BidNotFoundException("Bid not found"));
-        if(existingBid.isDeleted()) {
+        if (existingBid.isDeleted()) {
             throw new BidNotFoundException("Bid not found");
         }
         existingBid.setDeleted(true);
@@ -88,5 +89,41 @@ public class BidServiceImpl  implements BidService {
                 .accepted(false)
                 .deleted(false)
                 .build();
+    }
+
+    @Override
+    public List<EmployerBidResponse> getBidsByProjectId(String projectId) {
+        List<Bid> bids = bidRepository.findAllByProjectId_Id(projectId);
+        return convertToEmployerBidResponse(bids);
+
+    }
+
+    private List<EmployerBidResponse> convertToEmployerBidResponse(List<Bid> bids) {
+        List<EmployerBidResponse> response = bids.stream().map(
+                (bid) -> {
+                    //TODO: Add rating from rating service calculate average rating for freelancer
+                    //Rating rating = ratingService.getRatingByFreelancerId(bid.getFreelancerId().getId());          
+                    EmployerBidResponse bidResponse = EmployerBidResponse.builder()
+                            .id(bid.getId())
+                            .freelancerName(bid.getFreelancerId().getDisplayName())
+                            .bidAmount(bid.getBidAmount())
+                            .proposal(bid.getProposal())
+                            .build();
+                    return bidResponse;
+
+                }).toList();
+        return response;
+    }
+
+    @Override
+    public Boolean hireFreelancer(String id) {
+        Bid existingBid = bidRepository.findById(id).orElseThrow(
+                () -> new BidNotFoundException("Bid not found"));
+        if (existingBid.isDeleted()) {
+            throw new BidNotFoundException("Bid not found");
+        }
+        existingBid.setAccepted(true);
+        bidRepository.save(existingBid);
+        return true;
     }
 }

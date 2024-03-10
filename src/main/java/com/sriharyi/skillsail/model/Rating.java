@@ -22,9 +22,9 @@ import lombok.NoArgsConstructor;
 public class Rating {
     @Id
     private String id;
-    @Indexed(unique = true)
+    @Indexed()
     private String raterId; // the person who is giving the rating
-    @Indexed(unique = true)
+    @Indexed()
     private String revieweeId; // the person who is being rated
     private String review;
     private Integer rating;
