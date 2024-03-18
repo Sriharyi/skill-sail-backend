@@ -24,5 +24,5 @@ public interface SkillService   {
 
     List<SkillDto> getSkillsByCategory(String category);
 
-    Boolean enableSkill(String id, Boolean isChecked);
+    Boolean toggleSkill(String id);
 }

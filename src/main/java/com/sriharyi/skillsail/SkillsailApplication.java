@@ -11,5 +11,5 @@ public class SkillsailApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SkillsailApplication.class, args);
 	}
-
+	
 }

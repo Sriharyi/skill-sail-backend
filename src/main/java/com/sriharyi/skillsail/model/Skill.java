@@ -2,6 +2,7 @@ package com.sriharyi.skillsail.model;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -29,8 +30,8 @@ public class Skill {
     @Indexed(unique = true)
     private String name;
 
-    @Indexed(unique = true)
-    private String category;
+    @Indexed()
+    private List<String> category;
 
     private String description;
     
@@ -39,7 +40,8 @@ public class Skill {
     
     private boolean deleted;
 
-    private boolean enable;
+    @Builder.Default
+    private boolean enable = true;
 
     @CreatedDate
     private LocalDateTime createdDate;

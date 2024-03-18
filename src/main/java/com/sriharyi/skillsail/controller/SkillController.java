@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class SkillController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSkill(@PathVariable String id) {
         skillService.deleteSkill(id);
-        return new ResponseEntity<>("Successfully Deleted",HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/questions")
@@ -70,9 +71,9 @@ public class SkillController {
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
-    @PutMapping("/enable/{id}")
-    public ResponseEntity<Boolean> enableSkill(@PathVariable String id, @RequestBody Boolean isChecked) {
-        Boolean isEnabled = skillService.enableSkill(id, isChecked);
+    @PutMapping("/toggle/{id}")
+    public ResponseEntity<Boolean> toggleSkill(@PathVariable String id) {
+        Boolean isEnabled = skillService.toggleSkill(id);
         return new ResponseEntity<>(isEnabled, HttpStatus.OK);
     }
 

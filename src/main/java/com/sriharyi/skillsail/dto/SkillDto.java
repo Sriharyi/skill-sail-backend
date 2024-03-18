@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -21,7 +22,9 @@ public class SkillDto {
     @JsonProperty("skillDescription")
     private String description;
     @JsonProperty("skillCategory")
-    private String category;
+    private List<String> category;
     @JsonProperty("questions")
     private Set<QuestionDto> questions;
+    @JsonProperty("enable")
+    private Boolean enable;
 }

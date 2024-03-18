@@ -72,18 +72,18 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public SkillDto updateSkill(String id, SkillDto skillDto) {
-        Skill skill = mapToSkill(skillDto);
-        skill.setId(id);
-
+        Skill skill = skillRepository.findById(id).orElseThrow(
+                () -> new SkillNotFoundException("Skill not found")
+        );
         Set<QuestionDto> questions = skillDto.getQuestions();
-
+        skill.getQuestions().clear();
         if (questions != null) {
             questions.forEach(questionDto -> {
                 Question question = mapToQuestion(questionDto);
+                question = questionRepository.save(question);
                 skill.getQuestions().add(question);
             });
         }
-
         Skill updatedSkill = skillRepository.save(skill);
         return mapToSkillDto(updatedSkill);
     }
@@ -109,13 +109,21 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public Boolean enableSkill(String id, Boolean isChecked) {
+    public Boolean toggleSkill(String id) {
         Skill skill = skillRepository.findById(id).orElseThrow(
                 () -> new SkillNotFoundException("Skill not found")
         );
-        skill.setEnable(isChecked);
+        skill.setEnable(!skill.isEnable());
         skillRepository.save(skill);
         return true;
+    }
+
+    @Override
+    public List<SkillDto> getSkillsByCategory(String category) {
+        List<Skill> skills = skillRepository.findAllByCategoryAndDeletedIsFalse(category);
+        return skills.stream()
+                .map(this::mapToSkillDto)
+                .toList();
     }
 
     protected Skill mapToSkill(SkillDto skillDto) {
@@ -137,6 +145,7 @@ public class SkillServiceImpl implements SkillService {
                         .map(this::mapToQuestionDto)
                         .collect(Collectors.toSet()))
                 .category(skill.getCategory())
+                .enable(skill.isEnable())
                 .build();
     }
 
@@ -160,11 +169,5 @@ public class SkillServiceImpl implements SkillService {
                 .build();
     }
 
-    @Override
-    public List<SkillDto> getSkillsByCategory(String category) {
-        List<Skill> skills = skillRepository.findAllByCategoryAndDeletedIsFalse(category);
-        return skills.stream()
-                .map(this::mapToSkillDto)
-                .toList();
-    }
+  
 }
