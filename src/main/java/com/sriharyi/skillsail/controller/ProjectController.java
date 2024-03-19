@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
@@ -78,6 +79,12 @@ public class ProjectController {
     public ResponseEntity<List<OrderCardResponse>> getProjectsByFreelancerId(@PathVariable String freelancerId) {
         List<OrderCardResponse> projects = projectService.getProjectsByFreelancerId(freelancerId);
         return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/file")
+    public ResponseEntity<ProjectDto> addFileToProject(@RequestParam MultipartFile file, @PathVariable String id) {
+        ProjectDto project = projectService.addFileToProject(id, file);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
 }

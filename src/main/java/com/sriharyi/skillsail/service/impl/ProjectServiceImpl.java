@@ -9,17 +9,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
-import com.sriharyi.skillsail.exception.EmployerNotFoundException;
 import com.sriharyi.skillsail.exception.ProjectNotFoundException;
 import com.sriharyi.skillsail.model.EmployerProfile;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.model.Project;
 import com.sriharyi.skillsail.model.enums.ProjectStatus;
-import com.sriharyi.skillsail.repository.EmployerRepository;
 import com.sriharyi.skillsail.repository.ProjectRepository;
+import com.sriharyi.skillsail.service.FileStorageService;
 import com.sriharyi.skillsail.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    private final EmployerRepository employerProfileRepository;
+    private final FileStorageService fileStorageService;
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
@@ -163,6 +163,20 @@ public class ProjectServiceImpl implements ProjectService {
                     .deadline(project.getDeadline())
                     .build()    
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProjectDto addFileToProject(String id, MultipartFile file) {
+        Project project = projectRepository.findById(id).orElseThrow(
+                () -> new ProjectNotFoundException("Project not found "));
+        if (project.isDeleted()) {
+            throw new ProjectNotFoundException("Project not found ");
+        }
+        String folderName = "files/project-files";
+        String fileUrl = fileStorageService.storePdf(file, folderName);
+        project.setFileUrl(fileUrl);
+        project = projectRepository.save(project);
+        return mapToProjectDto(project);
     }
 
 }
