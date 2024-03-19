@@ -89,6 +89,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .selectedFreelancerId(project.getSelectedFreelancerId().getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
+                .thumbnail(project.getThumbnail())
+                .fileUrl(project.getFileUrl())
                 .category(project.getCategory())
                 .skills(project.getSkills())
                 .budget(project.getBudget())
@@ -175,6 +177,20 @@ public class ProjectServiceImpl implements ProjectService {
         String folderName = "files/project-files";
         String fileUrl = fileStorageService.storePdf(file, folderName);
         project.setFileUrl(fileUrl);
+        project = projectRepository.save(project);
+        return mapToProjectDto(project);
+    }
+
+    @Override
+    public ProjectDto addThumbnailToProject(String id, MultipartFile file) {
+        Project project = projectRepository.findById(id).orElseThrow(
+                () -> new ProjectNotFoundException("Project not found "));
+        if (project.isDeleted()) {
+            throw new ProjectNotFoundException("Project not found ");
+        }
+        String folderName = "images/project-thumbnails";
+        String thumbnail = fileStorageService.storeImage(file, folderName);
+        project.setThumbnail(thumbnail);
         project = projectRepository.save(project);
         return mapToProjectDto(project);
     }

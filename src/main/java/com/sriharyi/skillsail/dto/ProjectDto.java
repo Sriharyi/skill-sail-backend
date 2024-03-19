@@ -30,6 +30,10 @@ public class ProjectDto {
     private String title;
     @JsonProperty("description")
     private String description;
+    @JsonProperty("thumbnail")
+    private String thumbnail;
+    @JsonProperty("fileUrl")
+    private String fileUrl;
     @JsonProperty("category")
     private String category;
     @JsonProperty("skills")

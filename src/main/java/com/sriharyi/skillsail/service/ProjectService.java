@@ -28,4 +28,6 @@ public interface ProjectService {
     List<OrderCardResponse> getProjectsByFreelancerId(String freelancerId);
 
     ProjectDto addFileToProject(String id, MultipartFile file);
+
+    ProjectDto addThumbnailToProject(String id, MultipartFile file);
 }

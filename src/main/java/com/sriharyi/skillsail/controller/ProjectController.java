@@ -87,4 +87,10 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/thumbnail")
+    public ResponseEntity<ProjectDto> addThumbnailToProject(@RequestParam MultipartFile thumbnail, @PathVariable String id) {
+        ProjectDto project = projectService.addThumbnailToProject(id, thumbnail);
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
 }
