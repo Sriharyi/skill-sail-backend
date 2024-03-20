@@ -23,16 +23,31 @@ public class FileStorageServiceImpl implements FileStorageService {
     private String actualPath;
 
     @Override
-    public String storeFile(MultipartFile profilePicture,String FolderName) {
-        String fileName =  StringUtils.cleanPath(profilePicture.getOriginalFilename());
-        Path path = Paths.get(uploadDir + FolderName);
+    public String storeImage(MultipartFile file, String folderName) {
+        if (!file.getContentType().startsWith("image/")) {
+            throw new IllegalArgumentException("File must be an image");
+        }
+        return storeFile(file, folderName);
+    }
+    
+    @Override
+    public String storePdf(MultipartFile file, String folderName) {
+        if (!"application/pdf".equals(file.getContentType())) {
+            throw new IllegalArgumentException("File must be a PDF");
+        }
+        return storeFile(file, folderName);
+    }
+    
+    private String storeFile(MultipartFile file, String folderName) {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Path path = Paths.get(uploadDir + folderName);
         String filePath = path.toFile().getAbsolutePath() + "/" + fileName;
-
+    
         try {
-            profilePicture.transferTo(new File(filePath));
+            file.transferTo(new File(filePath));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return actualPath + FolderName + "/" + fileName;
+        return actualPath + folderName + "/" + fileName;
     }
 }

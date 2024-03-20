@@ -11,4 +11,8 @@ public interface BidRepository extends MongoRepository<Bid,String> {
     List<Bid> findAllByProjectId_Id(String projectId);
 
     List<Bid> findAllByFreelancerId_Id(String freelancerId);
+
+    Bid findByProjectId_IdAndFreelancerId_Id(String projectId, String freelancerId);
+
+
 }   

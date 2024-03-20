@@ -25,4 +25,6 @@ public interface BidService {
     Boolean hireFreelancer(String id);
 
     List<FreelancerBidResponse> getBidsByFreelancerId(String freelancerId);
+
+    Boolean isAlreadyBidByProjectIdAndFreelancerId(String projectId, String freelancerId);
 }

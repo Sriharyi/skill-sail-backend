@@ -20,7 +20,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -46,8 +45,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public AssessmentDto getAssessment(String id) {
         Assessment assessment = assessmentRepository.findById(id).orElseThrow(
-                () -> new AssesmentNotFoundException("Assessment not found ")
-        );
+                () -> new AssesmentNotFoundException("Assessment not found "));
         if (assessment.isDeleted()) {
             throw new AssesmentNotFoundException("Assessment not found ");
         }
@@ -57,23 +55,35 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public AssessmentDto updateAssessment(String id, AssessmentDto assessmentDto) {
         Assessment assessment = assessmentRepository.findById(id).orElseThrow(
-                () -> new AssesmentNotFoundException("Assessment not found ")
-        );
+                () -> new AssesmentNotFoundException("Assessment not found "));
         if (assessment.isDeleted()) {
             throw new AssesmentNotFoundException("Assessment not found ");
         }
-        assessmentDto.setId(id);
         String freelancerId = assessmentDto.getFreelancerId();
         String skillId = assessmentDto.getSkillId();
-        if (freelancerId != null) {
-            FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(freelancerId).orElseThrow(
-                    () -> new FreeLancerProfileNotFoundException("Freelancer profile not found ")
-            );
-            freeLancerProfile.setSkillsEarned(List.of(Skill.builder().id(skillId).build()));
-            freeLancerProfileRepository.save(freeLancerProfile);
+        if (assessmentDto.getScore() >= 70 && assessmentDto.getStatus().equals("COMPLETED")) {
+            if (freelancerId != null) {
+                FreeLancerProfile freeLancerProfile = freeLancerProfileRepository.findById(freelancerId).orElseThrow(
+                        () -> new FreeLancerProfileNotFoundException("Freelancer profile not found "));
+                
+                if(freeLancerProfile.getSkillsEarned() != null) {
+                    freeLancerProfile.getSkillsEarned().add(Skill.builder().id(skillId).build());
+                } else {
+                    freeLancerProfile.setSkillsEarned(List.of(Skill.builder().id(skillId).build()));
+                }
+
+                freeLancerProfileRepository.save(freeLancerProfile);
+            } 
         }
 
-        Assessment updatedAssessment = assessmentRepository.save(mapToAssessment(assessmentDto));
+        assessment.setSkill(Skill.builder().id(skillId).build());
+        assessment.setFreelancerProfile(FreeLancerProfile.builder().id(freelancerId).build());
+        assessment.setScore(assessmentDto.getScore());
+        assessment.setStatus(TestStatus.valueOf(assessmentDto.getStatus()));
+
+        
+
+        Assessment updatedAssessment = assessmentRepository.save(assessment);
         return mapToAssessmentDto(updatedAssessment);
     }
 
@@ -88,40 +98,35 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public CanTakeTest canTakeAssessment(String freelancerProfileId, String skillId) {
-        Optional<Assessment> assessment = assessmentRepository.findFirstByFreelancerProfile_IdAndSkill_Id(Sort.by(Sort.Direction.DESC, "updatedDate"), freelancerProfileId, skillId);
-        if(assessment.isEmpty()) {
+        Optional<Assessment> assessment = assessmentRepository.findFirstByFreelancerProfile_IdAndSkill_Id(
+                Sort.by(Sort.Direction.DESC, "updatedDate"), freelancerProfileId, skillId);
+        if (assessment.isEmpty()) {
             return CanTakeTest.builder()
                     .canTake(true)
                     .message("No assessment found for the freelancer and skill")
                     .build();
-        }
-        else if(assessment.get().getStatus().equals(TestStatus.COMPLETED)) {
+        } else if (assessment.get().getStatus().equals(TestStatus.COMPLETED)) {
             return CanTakeTest.builder()
                     .canTake(false)
                     .message("Assessment already completed")
                     .build();
-        }
-        else if(assessment.get().getStatus().equals(TestStatus.CANCELLED)) {
+        } else if (assessment.get().getStatus().equals(TestStatus.CANCELLED)) {
             return CanTakeTest.builder()
                     .canTake(true)
                     .message("Assessment cancelled")
                     .build();
-        }
-        else
-        {
+        } else {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime updatedDate = assessment.get().getUpdatedDate();
             long days = ChronoUnit.DAYS.between(updatedDate, now);
 
-            if(assessment.get().getStatus().equals(TestStatus.FAILED) && days<7)
-            {
+            if (assessment.get().getStatus().equals(TestStatus.FAILED) && days < 7) {
                 return CanTakeTest.builder()
                         .canTake(false)
-                        .message("You failed the test recently. You can take the test after 7 days from the last failed test")
+                        .message(
+                                "You failed the test recently. You can take the test after 7 days from the last failed test")
                         .build();
-            }
-            else
-            {
+            } else {
                 return CanTakeTest.builder()
                         .canTake(true)
                         .message("You can take the test")
@@ -132,7 +137,8 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     protected Assessment mapToAssessment(AssessmentDto assessmentDto) {
-        TestStatus status = assessmentDto.getStatus() == null ? TestStatus.PROGRESS : TestStatus.valueOf(assessmentDto.getStatus());
+        TestStatus status = assessmentDto.getStatus() == null ? TestStatus.PROGRESS
+                : TestStatus.valueOf(assessmentDto.getStatus());
         FreeLancerProfile freelancerProfile = FreeLancerProfile.builder().id(assessmentDto.getFreelancerId()).build();
         Skill skill = Skill.builder().id(assessmentDto.getSkillId()).build();
         return Assessment.builder()

@@ -99,8 +99,8 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
         if (freeLancerProfile.isDeleted()) {
             throw new FreeLancerProfileNotFoundException("FreeLancerProfile not found");
         }
-        String folderName = "profile-pictures";
-        String imagePath = fileStorageService.storeFile(profilePicture, folderName);
+        String folderName = "images/profile-pictures";
+        String imagePath = fileStorageService.storeImage(profilePicture, folderName);
         freeLancerProfile.setProfilePic(imagePath);
         freeLancerProfileRepository.save(freeLancerProfile);
         return imagePath;

@@ -94,8 +94,8 @@ public class EmployerServiceImpl implements EmployerService {
         if (employerProfile.isDeleted()) {
             throw new EmployerNotFoundException("Employer not found");
         }
-        String folderName = "company-logos";
-        String imagePath = fileStorageService.storeFile(profilePicture, folderName);
+        String folderName = "images/company-logos";
+        String imagePath = fileStorageService.storeImage(profilePicture, folderName);
         employerProfile.setCompanyLogo(imagePath);
         employerRepository.save(employerProfile);
         return imagePath;

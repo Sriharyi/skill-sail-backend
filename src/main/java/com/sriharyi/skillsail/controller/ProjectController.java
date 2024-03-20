@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
@@ -74,10 +75,46 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    //get page of projects by employer id
+    @GetMapping("/employer/{employerId}/page")
+    public ResponseEntity<Page<ProjectDto>> getProjectsByEmployerId(@PathVariable String employerId, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<ProjectDto> projects = projectService.getProjectsByEmployerId(employerId, pageable);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    //perform search by skill
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProjectDto>> searchProjectsBySkill(@RequestParam String searchText, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<ProjectDto> projects = projectService.searchProjectsBySkill(searchText, pageable);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    //get page of projects by skill and employer id
+    @GetMapping("/employer/{employerId}/search")
+    public ResponseEntity<Page<ProjectDto>> searchProjectsBySkillAndEmployerId(@RequestParam String searchText, @PathVariable String employerId, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<ProjectDto> projects = projectService.searchProjectsBySkillAndEmployerId(searchText, employerId, pageable);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
     @GetMapping("/freelancer/{freelancerId}")
     public ResponseEntity<List<OrderCardResponse>> getProjectsByFreelancerId(@PathVariable String freelancerId) {
         List<OrderCardResponse> projects = projectService.getProjectsByFreelancerId(freelancerId);
         return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/file")
+    public ResponseEntity<ProjectDto> addFileToProject(@RequestParam MultipartFile file, @PathVariable String id) {
+        ProjectDto project = projectService.addFileToProject(id, file);
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/thumbnail")
+    public ResponseEntity<ProjectDto> addThumbnailToProject(@RequestParam MultipartFile thumbnail, @PathVariable String id) {
+        ProjectDto project = projectService.addThumbnailToProject(id, thumbnail);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ProjectService {
 
@@ -25,4 +26,14 @@ public interface ProjectService {
     List<ProjectDto> getProjectsByEmployerId(String employerId);
 
     List<OrderCardResponse> getProjectsByFreelancerId(String freelancerId);
+
+    ProjectDto addFileToProject(String id, MultipartFile file);
+
+    ProjectDto addThumbnailToProject(String id, MultipartFile file);
+
+    Page<ProjectDto> getProjectsByEmployerId(String employerId, Pageable pageable);
+
+    Page<ProjectDto> searchProjectsBySkill(String searchText, Pageable pageable);
+
+    Page<ProjectDto> searchProjectsBySkillAndEmployerId(String searchText, String employerId, Pageable pageable);
 }

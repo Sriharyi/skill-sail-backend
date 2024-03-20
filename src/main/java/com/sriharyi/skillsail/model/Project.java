@@ -36,6 +36,10 @@ public class Project {
 
     private String description;
 
+    private String thumbnail;
+
+    private String fileUrl;
+
     private String category;
 
     private List<String> skills;

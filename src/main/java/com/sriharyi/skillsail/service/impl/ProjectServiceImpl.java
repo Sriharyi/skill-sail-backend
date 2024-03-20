@@ -9,17 +9,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sriharyi.skillsail.dto.OrderCardResponse;
 import com.sriharyi.skillsail.dto.ProjectDto;
-import com.sriharyi.skillsail.exception.EmployerNotFoundException;
 import com.sriharyi.skillsail.exception.ProjectNotFoundException;
 import com.sriharyi.skillsail.model.EmployerProfile;
 import com.sriharyi.skillsail.model.FreeLancerProfile;
 import com.sriharyi.skillsail.model.Project;
 import com.sriharyi.skillsail.model.enums.ProjectStatus;
-import com.sriharyi.skillsail.repository.EmployerRepository;
 import com.sriharyi.skillsail.repository.ProjectRepository;
+import com.sriharyi.skillsail.service.FileStorageService;
 import com.sriharyi.skillsail.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    private final EmployerRepository employerProfileRepository;
+    private final FileStorageService fileStorageService;
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
@@ -89,6 +89,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .selectedFreelancerId(project.getSelectedFreelancerId().getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
+                .thumbnail(project.getThumbnail())
+                .fileUrl(project.getFileUrl())
                 .category(project.getCategory())
                 .skills(project.getSkills())
                 .budget(project.getBudget())
@@ -157,6 +159,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .title(project.getTitle())
                     .description(project.getDescription())
                     .category(project.getCategory())
+                    .thumbnail(project.getThumbnail())
+                    .fileUrl(project.getFileUrl())
                     .skills(project.getSkills().toArray(new String[0]))
                     .bidAmount(project.getBidAmount())
                     .status(project.getStatus().name())
@@ -164,5 +168,50 @@ public class ProjectServiceImpl implements ProjectService {
                     .build()    
         ).collect(Collectors.toList());
     }
+
+    @Override
+    public ProjectDto addFileToProject(String id, MultipartFile file) {
+        Project project = projectRepository.findById(id).orElseThrow(
+                () -> new ProjectNotFoundException("Project not found "));
+        if (project.isDeleted()) {
+            throw new ProjectNotFoundException("Project not found ");
+        }
+        String folderName = "files/project-files";
+        String fileUrl = fileStorageService.storePdf(file, folderName);
+        project.setFileUrl(fileUrl);
+        project = projectRepository.save(project);
+        return mapToProjectDto(project);
+    }
+
+    @Override
+    public ProjectDto addThumbnailToProject(String id, MultipartFile file) {
+        Project project = projectRepository.findById(id).orElseThrow(
+                () -> new ProjectNotFoundException("Project not found "));
+        if (project.isDeleted()) {
+            throw new ProjectNotFoundException("Project not found ");
+        }
+        String folderName = "images/project-thumbnails";
+        String thumbnail = fileStorageService.storeImage(file, folderName);
+        project.setThumbnail(thumbnail);
+        project = projectRepository.save(project);
+        return mapToProjectDto(project);
+    }
+
+    @Override
+    public Page<ProjectDto> getProjectsByEmployerId(String employerId, Pageable pageable) {
+        Page<Project> projects = projectRepository.findAllByEmployerProfileId_IdAndDeletedFalse(pageable, employerId);
+        return projects.map(this::mapToProjectDto);
+    }
+
+    @Override
+    public Page<ProjectDto> searchProjectsBySkill(String skill, Pageable pageable) {
+        return projectRepository.findBySkillsContaining(skill, pageable).map(this::mapToProjectDto);
+    }
+
+    //search by skill based on employer id
+    @Override
+    public Page<ProjectDto> searchProjectsBySkillAndEmployerId(String skill, String employerId, Pageable pageable) {
+        return projectRepository.findBySkillsContainingAndEmployerProfileId_Id(skill, employerId, pageable).map(this::mapToProjectDto);
+    }   
 
 }
