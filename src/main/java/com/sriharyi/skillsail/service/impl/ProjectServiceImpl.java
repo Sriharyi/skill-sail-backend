@@ -210,6 +210,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Page<ProjectDto> searchProjectsBySkillAndEmployerId(String skill, String employerId, Pageable pageable) {
         return projectRepository.findBySkillsContainingAndEmployerProfileId_Id(skill, employerId, pageable).map(this::mapToProjectDto);
-    }
+    }   
 
 }

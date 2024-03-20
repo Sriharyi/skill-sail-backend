@@ -164,11 +164,13 @@ public class BidServiceImpl implements BidService {
     private List<FreelancerBidResponse> convertToFreelancerBidResponse(List<Bid> bids) {
         List<FreelancerBidResponse> response = bids.stream().map(
                 (bid) -> {
+                    Project project = projectRepository.findById(bid.getProjectId().getId()).orElseThrow(
+                            () -> new ProjectNotFoundException("Project not found"));
                     FreelancerBidResponse bidResponse = FreelancerBidResponse.builder()
                             .id(bid.getId())
                             .projectId(bid.getProjectId().getId())
                             .projectName(bid.getProjectId().getTitle())
-                            .companyName(bid.getProjectId().getEmployerProfileId().getCompanyName())
+                            .companyName(project.getEmployerProfileId().getCompanyName())
                             .BidDeadline(bid.getProjectId().getBidDeadline())
                             .bidAmount(bid.getBidAmount())
                             .status(bid.getBidStatus().name())
@@ -177,6 +179,15 @@ public class BidServiceImpl implements BidService {
 
                 }).toList();
         return response;
+    }
+
+    @Override
+    public Boolean isAlreadyBidByProjectIdAndFreelancerId(String projectId, String freelancerId) {
+        Bid bid = bidRepository.findByProjectId_IdAndFreelancerId_Id(projectId, freelancerId);
+        if(bid != null) {
+            return true;
+        }
+        return false;
     }
 
 

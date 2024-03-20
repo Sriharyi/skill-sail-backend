@@ -68,6 +68,14 @@ public class BidController {
        List<FreelancerBidResponse> bids = bidService.getBidsByFreelancerId(freelancerId);
        return new ResponseEntity<>(bids, HttpStatus.OK);
    }
+
+   //is already bid by project id and freelancer id
+    @GetMapping("/project/{projectId}/freelancer/{freelancerId}")
+    public ResponseEntity<Boolean> isAlreadyBidByProjectIdAndFreelancerId(@PathVariable String projectId, @PathVariable String freelancerId) {
+        Boolean isAlreadyBid = bidService.isAlreadyBidByProjectIdAndFreelancerId(projectId, freelancerId);
+        return new ResponseEntity<>(isAlreadyBid, HttpStatus.OK);
+    }
+
 //
 //    @GetMapping("/project/{projectId}")
 //    public ResponseEntity<List<Bid>> getBidsByProjectId(@PathVariable String projectId) {
