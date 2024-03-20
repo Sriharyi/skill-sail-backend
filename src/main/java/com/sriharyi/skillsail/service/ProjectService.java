@@ -30,4 +30,10 @@ public interface ProjectService {
     ProjectDto addFileToProject(String id, MultipartFile file);
 
     ProjectDto addThumbnailToProject(String id, MultipartFile file);
+
+    Page<ProjectDto> getProjectsByEmployerId(String employerId, Pageable pageable);
+
+    Page<ProjectDto> searchProjectsBySkill(String searchText, Pageable pageable);
+
+    Page<ProjectDto> searchProjectsBySkillAndEmployerId(String searchText, String employerId, Pageable pageable);
 }

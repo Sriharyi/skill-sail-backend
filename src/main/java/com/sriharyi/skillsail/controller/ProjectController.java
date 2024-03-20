@@ -75,6 +75,30 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    //get page of projects by employer id
+    @GetMapping("/employer/{employerId}/page")
+    public ResponseEntity<Page<ProjectDto>> getProjectsByEmployerId(@PathVariable String employerId, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<ProjectDto> projects = projectService.getProjectsByEmployerId(employerId, pageable);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    //perform search by skill
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProjectDto>> searchProjectsBySkill(@RequestParam String searchText, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<ProjectDto> projects = projectService.searchProjectsBySkill(searchText, pageable);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    //get page of projects by skill and employer id
+    @GetMapping("/employer/{employerId}/search")
+    public ResponseEntity<Page<ProjectDto>> searchProjectsBySkillAndEmployerId(@RequestParam String searchText, @PathVariable String employerId, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<ProjectDto> projects = projectService.searchProjectsBySkillAndEmployerId(searchText, employerId, pageable);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
     @GetMapping("/freelancer/{freelancerId}")
     public ResponseEntity<List<OrderCardResponse>> getProjectsByFreelancerId(@PathVariable String freelancerId) {
         List<OrderCardResponse> projects = projectService.getProjectsByFreelancerId(freelancerId);

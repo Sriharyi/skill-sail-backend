@@ -195,4 +195,21 @@ public class ProjectServiceImpl implements ProjectService {
         return mapToProjectDto(project);
     }
 
+    @Override
+    public Page<ProjectDto> getProjectsByEmployerId(String employerId, Pageable pageable) {
+        Page<Project> projects = projectRepository.findAllByEmployerProfileId_IdAndDeletedFalse(pageable, employerId);
+        return projects.map(this::mapToProjectDto);
+    }
+
+    @Override
+    public Page<ProjectDto> searchProjectsBySkill(String skill, Pageable pageable) {
+        return projectRepository.findBySkillsContaining(skill, pageable).map(this::mapToProjectDto);
+    }
+
+    //search by skill based on employer id
+    @Override
+    public Page<ProjectDto> searchProjectsBySkillAndEmployerId(String skill, String employerId, Pageable pageable) {
+        return projectRepository.findBySkillsContainingAndEmployerProfileId_Id(skill, employerId, pageable).map(this::mapToProjectDto);
+    }
+
 }
