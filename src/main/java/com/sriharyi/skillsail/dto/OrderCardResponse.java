@@ -18,7 +18,9 @@ public class OrderCardResponse {
     String id;
     String title;
     String description;
+    String thumbnail;
     String category;
+    String fileUrl;
     String skills[];
     Double bidAmount;
     String status;

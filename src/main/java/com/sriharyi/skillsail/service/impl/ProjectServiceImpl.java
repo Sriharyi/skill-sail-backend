@@ -159,6 +159,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .title(project.getTitle())
                     .description(project.getDescription())
                     .category(project.getCategory())
+                    .thumbnail(project.getThumbnail())
+                    .fileUrl(project.getFileUrl())
                     .skills(project.getSkills().toArray(new String[0]))
                     .bidAmount(project.getBidAmount())
                     .status(project.getStatus().name())
