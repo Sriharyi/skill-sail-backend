@@ -127,8 +127,6 @@ public class FreeLancerProflileServiceImpl implements FreeLancerProfileService {
             actualSkills.add(actualSkill);
         }
 
-        
-
         EarnedSkillsResponse earnedSkillsResponse = EarnedSkillsResponse.builder()
                 .skills(actualSkills.stream().map( skill -> skill.getName()).toList())
                 .build();
